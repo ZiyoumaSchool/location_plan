@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.localise">
    <application
-        android:label="localise"
+        android:label="Plan Location"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

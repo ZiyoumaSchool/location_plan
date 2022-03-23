@@ -1,6 +1,6 @@
 # localise
 
-A new Flutter project.
+Create application to build location plan with selected position.
 
 ## Getting Started
 

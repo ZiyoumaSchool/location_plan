@@ -3,16 +3,12 @@ library onboarding;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:localise/common/app_color.dart';
 import 'package:localise/common/app_dimens.dart';
-import 'package:localise/common/app_fonts.dart';
 import 'package:localise/common/app_image.dart';
-import 'package:localise/common/app_text_style.dart';
 import 'package:localise/ui/page/onboarding/widgets/page_component.dart';
 import 'package:localise/ui/page/onboarding/widgets/play_and_stop.dart';
 import 'package:localise/ui/shared_component/button_text.dart';
 import 'package:localise/ui/shared_component/rounded_button.dart';
-import 'package:lottie/lottie.dart';
 
 part 'onboard_logic.dart';
 part 'onboard_state.dart';

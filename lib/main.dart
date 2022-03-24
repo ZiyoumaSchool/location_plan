@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:localise/common/app_color.dart';
 import 'package:localise/common/app_dimens.dart';
 import 'package:localise/common/app_image.dart';
 import 'package:localise/common/app_text_style.dart';
@@ -53,6 +52,7 @@ class SplashhPage extends StatefulWidget {
 class _SplashhPageState extends State<SplashhPage> {
   // var storage = Get.find<GetStorage>();
 
+  //Wait 3 seconds and redirect user to onboarding page
   @override
   void initState() {
     super.initState();

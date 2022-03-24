@@ -9,8 +9,5 @@ class OnboardingState {
     controller = PageController();
     percent = 0.0.obs;
     current = 0.obs;
-
-    ///Initialize variables
-    // controller = Rx<TabController>TabController(length: list.length, vsync: this);
   }
 }

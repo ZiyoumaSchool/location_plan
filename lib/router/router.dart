@@ -8,8 +8,6 @@ class RouteConfig {
 
   ///Alias ​​mapping page
   static final List<GetPage> getPages = [
-    // GetPage(name: splash, page: () => SplashPage()),
-    // GetPage(name: main, page: () => MainPage()),
     GetPage(
       name: onboard,
       page: () => OnboarddingPage(),

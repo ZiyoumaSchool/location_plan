@@ -8,6 +8,7 @@ class AppTextStyle {
     fontWeight: FontWeight.bold,
     fontSize: 20,
     color: AppColor.black,
+    fontFamily: AppFont.poppins,
   );
 
   static const TextStyle simple = TextStyle(

@@ -9,4 +9,5 @@ class AppImage {
       "assets/images/bottom_right.svg";
   static const String couronne = "assets/images/couronne.svg";
   static const String splash = "assets/images/splash_screen.json";
+  static const String maps = "assets/images/maps.png";
 }

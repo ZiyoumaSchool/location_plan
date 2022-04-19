@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:localise/common/app_dimens.dart';
 import 'package:localise/common/app_image.dart';
+import 'package:localise/router/router.dart';
 import 'package:localise/ui/page/onboarding/widgets/page_component.dart';
 import 'package:localise/ui/page/onboarding/widgets/play_and_stop.dart';
 import 'package:localise/ui/shared_component/button_text.dart';
@@ -97,7 +98,11 @@ class OnboarddingPage extends StatelessWidget {
               ),
             ButtonText(
               text: state.percent.value == 1.0 ? "Terminer" : "Passer",
-              press: () {},
+              press: () {
+                if (state.percent.value == 1.0) {
+                  Get.offAllNamed(RouteConfig.main);
+                }
+              },
             ),
             if (state.percent.value != 1.0)
               RoundedButton(

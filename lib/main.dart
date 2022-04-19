@@ -26,7 +26,7 @@ class _MyAppState extends State<MyApp> {
     return GestureDetector(
       onTap: hideKeyboard,
       child: GetMaterialApp(
-        title: 'Flutter Demo',
+        title: 'Location plan',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),

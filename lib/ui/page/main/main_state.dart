@@ -1,13 +1,15 @@
 part of main_page;
 
 class MainState {
-  PlacesService place_services = PlacesService();
-  var listAutoComplete =
-      List<PlacesAutoCompleteResult>.empty(growable: true).obs;
+  late TextEditingController searchController;
+
+  var kGoogleApiKey = "AIzaSyDMvPHsbM0l51gW4shfWTHMUD-8Df-2UKU";
+
+  late GoogleMapsPlaces places;
 
   late Completer<GoogleMapController> mapController;
-  late Location location;
-  late LocationData currentPosition;
+  late locate.Location location;
+  late locate.LocationData currentPosition;
   late RxnDouble radius;
 
   Rx<Marker> position = Rx<Marker>(Marker(
@@ -19,7 +21,7 @@ class MainState {
   ));
 
   double maxValue = 25;
-  double minValue = 15;
+  double minValue = 13;
 
   double initAnimateMinValue = 5.69;
   double initAnimateMaxValue = 5.69;
@@ -32,12 +34,15 @@ class MainState {
 
   RxBool isLoadCurrentPosition = RxBool(false);
   RxBool hasAutoCompleteResult = RxBool(false);
+  RxBool isLoadSearch = RxBool(false);
   // late Completer<GoogleMapController> mapController;
 
   late PageController controller;
   MainState() {
+    places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
     mapController = Completer();
-    location = Location();
+    location = locate.Location();
     radius = RxnDouble(null);
+    searchController = TextEditingController();
   }
 }

@@ -7,8 +7,8 @@ class MainLogic extends GetxController {
   onInit() async {
     super.onInit();
     getCurrentPosition();
-    state.place_services
-        .initialize(apiKey: "AIzaSyDMvPHsbM0l51gW4shfWTHMUD-8Df-2UKU");
+    // state.place_services
+    //     .initialize(apiKey: "AIzaSyDMvPHsbM0l51gW4shfWTHMUD-8Df-2UKU");
   }
 
   getCurrentPosition() {
@@ -33,10 +33,22 @@ class MainLogic extends GetxController {
     });
   }
 
-  getAutoCompleteResults() async {
-    final placeResults = await state.place_services.getAutoComplete("ber");
-    if (placeResults != null) {
-      state.listAutoComplete.value = placeResults;
+  Future<Null> displayPrediction(Prediction p) async {
+    print("delano roosvelt");
+
+    if (p != null) {
+      PlacesDetailsResponse detail =
+          await state.places.getDetailsByPlaceId(p.placeId!);
+
+      var placeId = p.placeId;
+      if (detail.result.geometry != null) {
+        state.currentPos.value = LatLng(detail.result.geometry!.location.lat,
+            detail.result.geometry!.location.lng);
+      }
+
+      // var address = await Geocoder.local.findAddressesFromQuery(p.description);
+      print(state.currentPos.value);
+      update();
     }
   }
 }

@@ -12,6 +12,19 @@ void main() {
   runApp(const MyApp());
 }
 
+Map<int, Color> color = {
+  50: const Color.fromRGBO(136, 14, 79, .1),
+  100: const Color.fromRGBO(136, 14, 79, .2),
+  200: const Color.fromRGBO(136, 14, 79, .3),
+  300: const Color.fromRGBO(136, 14, 79, .4),
+  400: const Color.fromRGBO(136, 14, 79, .5),
+  500: const Color.fromRGBO(136, 14, 79, .6),
+  600: const Color.fromRGBO(136, 14, 79, .7),
+  700: const Color.fromRGBO(136, 14, 79, .8),
+  800: const Color.fromRGBO(136, 14, 79, .9),
+  900: const Color.fromRGBO(136, 14, 79, 1),
+};
+
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -26,9 +39,10 @@ class _MyAppState extends State<MyApp> {
     return GestureDetector(
       onTap: hideKeyboard,
       child: GetMaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Location plan',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: MaterialColor(0xFF11823b, color),
         ),
         home: SplashhPage(),
         getPages: RouteConfig.getPages,
@@ -57,7 +71,7 @@ class _SplashhPageState extends State<SplashhPage> {
   void initState() {
     super.initState();
     Timer(
-      Duration(seconds: 3),
+      const Duration(seconds: 3),
       () => Get.offAllNamed(RouteConfig.onboard),
     );
   }
@@ -77,7 +91,7 @@ class _SplashhPageState extends State<SplashhPage> {
               alignment: Alignment.topLeft,
               child: SvgPicture.asset(AppImage.top_left_circle_svg),
             ),
-            SizedBox(
+            const SizedBox(
               height: AppDimens.mediumPadding * 3,
             ),
             Align(
@@ -86,7 +100,7 @@ class _SplashhPageState extends State<SplashhPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SvgPicture.asset(AppImage.logo_svg),
-                  Text.rich(
+                  const Text.rich(
                     TextSpan(
                       text: "GEO",
                       children: [
@@ -98,10 +112,10 @@ class _SplashhPageState extends State<SplashhPage> {
                       style: AppTextStyle.splahTextStyle,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: AppDimens.mediumPadding,
                   ),
-                  Text(
+                  const Text(
                     "Généré votre plan de localisation.",
                     style: AppTextStyle.simple,
                   )

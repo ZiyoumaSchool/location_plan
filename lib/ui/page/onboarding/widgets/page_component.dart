@@ -23,13 +23,13 @@ class PageViewComponent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
+          const SizedBox(
             height: AppDimens.extraPadding,
           ),
           Lottie.asset(
             animation,
           ),
-          SizedBox(
+          const SizedBox(
             height: AppDimens.extraPadding,
           ),
           Text(
@@ -39,7 +39,7 @@ class PageViewComponent extends StatelessWidget {
               fontFamily: AppFont.poppins,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: AppDimens.smallPadding,
           ),
           Text(

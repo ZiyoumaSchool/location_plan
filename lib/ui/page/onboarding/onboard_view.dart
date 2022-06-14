@@ -22,7 +22,7 @@ class OnboarddingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: SizedBox(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         child: Stack(
@@ -30,7 +30,7 @@ class OnboarddingPage extends StatelessWidget {
           children: [
             PageView(
               controller: state.controller,
-              children: <Widget>[
+              children: const <Widget>[
                 PageViewComponent(
                   animation: AppImage.onboard_1_json,
                   describe:
@@ -63,7 +63,7 @@ class OnboarddingPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               _buildStopAndPlayButton(),
-              SizedBox(
+              const SizedBox(
                 height: 70,
               ),
               _buildButtonBar(),
@@ -100,7 +100,7 @@ class OnboarddingPage extends StatelessWidget {
               text: state.percent.value == 1.0 ? "Terminer" : "Passer",
               press: () {
                 if (state.percent.value == 1.0) {
-                  Get.offAllNamed(RouteConfig.main);
+                  Get.offAllNamed(RouteConfig.main_static);
                 }
               },
             ),

@@ -1,7 +1,11 @@
 library main_page;
 
 import 'dart:async';
+import 'dart:io';
+import 'dart:ui';
 
+import 'package:flutter/rendering.dart';
+import 'package:localise/router/router.dart';
 import 'package:location/location.dart' as locate;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -15,13 +19,17 @@ import 'package:localise/common/app_color.dart';
 import 'package:localise/common/app_dimens.dart';
 import 'package:localise/common/app_image.dart';
 import 'package:localise/common/app_shadows.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:screenshot/screenshot.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
+
+import 'package:pdf/widgets.dart' as pw;
 
 part 'main_logic.dart';
 part 'main_state.dart';
 
 class MainPage extends StatefulWidget {
-  MainPage({Key? key}) : super(key: key);
+  const MainPage({Key? key}) : super(key: key);
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -35,207 +43,404 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      child: Obx(() {
-        return !state.isLoadCurrentPosition.value
-            ? Stack(
-                children: [
-                  Container(
-                    height: MediaQuery.of(context).size.height,
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      // color: Colors.grey.shade900.withOpacity(0.3),
-                      image: DecorationImage(
-                        fit: BoxFit.fitHeight,
-                        image: AssetImage(AppImage.maps),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    height: MediaQuery.of(context).size.height,
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade900.withOpacity(0.3),
-                    ),
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        color: AppColor.primary,
-                      ),
-                    ),
-                  ),
-                ],
-              )
-            :
-            // return
-            Stack(
-                children: [
-                  Obx(() {
-                    return GoogleMap(
-                      markers: Set<Marker>.of([state.position.value]),
-                      zoomControlsEnabled: false,
-                      zoomGesturesEnabled: true,
-                      mapType: MapType.normal,
-                      initialCameraPosition: CameraPosition(
-                        target: state.currentPos.value,
-                        // zoom: state.radius.value ?? state.minValue,
-                      ),
-                      onMapCreated:
-                          (GoogleMapController controllerCurrent) async {
-                        state.mapController.complete(controllerCurrent);
-
-                        final GoogleMapController controller =
-                            await state.mapController.future;
-
-                        controller.animateCamera(
-                          CameraUpdate.newCameraPosition(
-                            CameraPosition(
-                              target: state.currentPos.value,
-                              zoom: 15,
-                            ),
-                          ),
-                        );
-                        state.position.value = Marker(
-                          markerId: MarkerId("current_position"),
-                          infoWindow: InfoWindow(
-                            title: 'Zone selectioner',
-                            snippet:
-                                "Le plan va etre generer a partir de ce point",
-                          ),
-                          position: state.currentPos.value,
-                        );
-                      },
-                      onTap: (position) async {
-                        state.currentPos.value = position;
-                        print(position.toString());
-
-                        final GoogleMapController controller =
-                            await state.mapController.future;
-
-                        controller.animateCamera(
-                          CameraUpdate.newCameraPosition(
-                            CameraPosition(
-                              target: state.currentPos.value,
-                              zoom: state.radius.value ?? state.minValue,
-                            ),
-                          ),
-                        );
-                        state.position.value = Marker(
-                          markerId: MarkerId("current_position"),
-                          infoWindow: InfoWindow(
-                            title: 'Zone selectioner',
-                            snippet:
-                                "Le plan va etre generer a partir de ce point",
-                          ),
-                          position: state.currentPos.value,
-                        );
-                      },
-                    );
-                  }),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 50, right: 20),
-                    child: Align(
-                      alignment: Alignment.topRight,
-                      child: InkWell(
-                        splashColor: AppColor.primary,
-                        radius: 5,
-                        // onTap: _showMyDialog
-                        onTap: _handlePressButton,
-                        child: Container(
-                          height: 50,
-                          width: 50,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(50),
-                            boxShadow: AppShadow.boxShadow,
-                          ),
-                          child: Icon(
-                            Icons.search,
-                            color: AppColor.primary,
-                          ),
+        body: SingleChildScrollView(
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: Obx(() {
+          return !state.isLoadCurrentPosition.value
+              ? Stack(
+                  children: [
+                    Container(
+                      height: MediaQuery.of(context).size.height,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: const BoxDecoration(
+                        // color: Colors.grey.shade900.withOpacity(0.3),
+                        image: DecorationImage(
+                          fit: BoxFit.fitHeight,
+                          image: AssetImage(AppImage.maps),
                         ),
                       ),
                     ),
-                  ),
-                  Obx(() {
-                    return Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        height: state.radius.value == null ? 90 : 140,
-                        padding: EdgeInsets.all(10),
-                        margin: EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: AppShadow.boxShadow,
+                    Container(
+                      height: MediaQuery.of(context).size.height,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade900.withOpacity(0.3),
+                      ),
+                      child: const Center(
+                        child: CircularProgressIndicator(
+                          color: AppColor.primary,
                         ),
-                        child: Center(
-                          child: Column(
-                            children: [
-                              SfSlider(
-                                activeColor: AppColor.primary,
-                                inactiveColor:
-                                    AppColor.primary.withOpacity(0.3),
-                                min: state.minValue,
-                                max: state.maxValue,
-                                value: state.radius.value == null
-                                    ? state.minValue
-                                    : state.radius.value,
-                                interval: 2,
-                                showTicks: true,
-                                showLabels: true,
-                                enableTooltip: true,
-                                minorTicksPerInterval: 1,
-                                onChanged: (dynamic value) async {
-                                  final GoogleMapController controller =
-                                      await state.mapController.future;
+                      ),
+                    ),
+                  ],
+                )
+              :
+              // return
+              Stack(
+                  children: [
+                    Obx(() {
+                      if (state.isVisible.value) {
+                        print("say hello");
+                      }
+                      return RepaintBoundary(
+                        key: state.key,
+                        child:
+                            // Container(
+                            //   color: Colors.red,
+                            //   height: 100,
+                            //   width: 100,
+                            // )
+                            GoogleMap(
+                          markers: <Marker>{state.position.value},
+                          zoomControlsEnabled: false,
+                          zoomGesturesEnabled: true,
+                          mapType: MapType.normal,
+                          initialCameraPosition: CameraPosition(
+                            target: state.currentPos.value,
+                            // zoom: state.radius.value ?? state.minValue,
+                          ),
+                          onMapCreated:
+                              (GoogleMapController controllerCurrent) async {
+                            state.mapController.complete(controllerCurrent);
 
-                                  controller.animateCamera(
-                                    CameraUpdate.newCameraPosition(
-                                      CameraPosition(
-                                        target: state.currentPos.value,
-                                        zoom: state.radius.value ??
-                                            state.minValue,
-                                      ),
-                                    ),
-                                  );
+                            final GoogleMapController controller =
+                                await state.mapController.future;
 
-                                  state.position.value = Marker(
-                                    markerId: MarkerId("current_position"),
-                                    infoWindow: InfoWindow(
-                                      title: 'Zone selectioner',
-                                      snippet:
-                                          "Le plan va etre generer a partir de ce point",
-                                    ),
-                                    position: state.currentPos.value,
-                                  );
-
-                                  state.radius.value = value as double;
-                                },
+                            controller.animateCamera(
+                              CameraUpdate.newCameraPosition(
+                                CameraPosition(
+                                  target: state.currentPos.value,
+                                  zoom: 15,
+                                ),
                               ),
-                              SizedBox(height: AppDimens.smallPadding),
+                            );
+                            state.position.value = Marker(
+                              markerId: const MarkerId("current_position"),
+                              infoWindow: const InfoWindow(
+                                title: 'Zone selectioner',
+                                snippet:
+                                    "Le plan va etre generer a partir de ce point",
+                              ),
+                              position: state.currentPos.value,
+                            );
+                          },
+                          onTap: (position) async {
+                            state.currentPos.value = position;
+                            print(position.toString());
+
+                            final GoogleMapController controller =
+                                await state.mapController.future;
+
+                            controller.animateCamera(
+                              CameraUpdate.newCameraPosition(
+                                CameraPosition(
+                                  target: state.currentPos.value,
+                                  zoom: state.radius.value ?? state.minValue,
+                                ),
+                              ),
+                            );
+                            state.position.value = Marker(
+                              markerId: const MarkerId("current_position"),
+                              infoWindow: const InfoWindow(
+                                title: 'Zone selectioner',
+                                snippet:
+                                    "Le plan va etre generer a partir de ce point",
+                              ),
+                              position: state.currentPos.value,
+                            );
+                          },
+                        ),
+                      );
+                    }),
+                    Obx(() {
+                      return Visibility(
+                        visible: state.isVisible.value,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 50, right: 20),
+                          child: Align(
+                            alignment: Alignment.topRight,
+                            child: InkWell(
+                              splashColor: AppColor.primary,
+                              radius: 5,
+                              // onTap: _showMyDialog
+                              onTap: _handlePressButton,
+                              child: Container(
+                                height: 50,
+                                width: 50,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(50),
+                                  boxShadow: AppShadow.boxShadow,
+                                ),
+                                child: const Icon(
+                                  Icons.search,
+                                  color: AppColor.primary,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
+                    Obx(() {
+                      return Visibility(
+                        visible: state.isVisible.value,
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
                               Align(
                                 alignment: Alignment.bottomRight,
-                                child: state.radius.value != null
-                                    ? ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          primary: AppColor.primary,
+                                child: Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 20),
+                                  // height: 500,
+                                  width: 40,
+                                  child: Column(
+                                    children: [
+                                      IconButton(
+                                        icon: Icons.add,
+                                        onpress: logic.incrementZone,
+                                      ),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                         ),
-                                        onPressed: () {},
-                                        child: Text("continuer"),
-                                      )
-                                    : Container(),
+                                        height: state.radius.value != null
+                                            ? 330
+                                            : 400,
+                                        child: SfSlider.vertical(
+                                          min: state.minZoneValue,
+                                          max: state.maxZoneValue,
+                                          value: state.percentZone.value,
+                                          interval: 20,
+                                          showTicks: true,
+                                          // showLabels: true,
+                                          //  showTooltip: true,
+                                          minorTicksPerInterval: 1,
+                                          onChanged: (dynamic value) {
+                                            print(value);
+                                            state.percentZone.value = value;
+                                            print("change values");
+                                          },
+                                        ),
+                                      ),
+                                      IconButton(
+                                        icon: Icons.remove,
+                                        onpress: logic.decrementZone,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                height: state.radius.value == null ? 90 : 140,
+                                padding: const EdgeInsets.all(10),
+                                margin: const EdgeInsets.all(20),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: AppShadow.boxShadow,
+                                ),
+                                child: Center(
+                                  child: Column(
+                                    children: [
+                                      SfSlider(
+                                        activeColor: AppColor.primary,
+                                        inactiveColor:
+                                            AppColor.primary.withOpacity(0.3),
+                                        min: state.minValue,
+                                        max: state.maxValue,
+                                        value: state.radius.value ??
+                                            state.minValue,
+                                        interval: 2,
+                                        showTicks: true,
+                                        showLabels: true,
+                                        enableTooltip: true,
+                                        minorTicksPerInterval: 1,
+                                        onChanged: (dynamic value) async {
+                                          final GoogleMapController controller =
+                                              await state.mapController.future;
+
+                                          controller.animateCamera(
+                                            CameraUpdate.newCameraPosition(
+                                              CameraPosition(
+                                                target: state.currentPos.value,
+                                                zoom: state.radius.value ??
+                                                    state.minValue,
+                                              ),
+                                            ),
+                                          );
+
+                                          state.position.value = Marker(
+                                            markerId: const MarkerId(
+                                                "current_position"),
+                                            infoWindow: const InfoWindow(
+                                              title: 'Zone selectioner',
+                                              snippet:
+                                                  "Le plan va etre generer a partir de ce point",
+                                            ),
+                                            position: state.currentPos.value,
+                                          );
+
+                                          state.radius.value = value as double;
+                                        },
+                                      ),
+                                      const SizedBox(
+                                          height: AppDimens.smallPadding),
+                                      Align(
+                                        alignment: Alignment.bottomRight,
+                                        child: state.radius.value != null
+                                            ? ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  primary: AppColor.primary,
+                                                ),
+                                                onPressed: () async {
+                                                  final boundary = state
+                                                          .key.currentContext
+                                                          ?.findRenderObject()
+                                                      as RenderRepaintBoundary?;
+                                                  final image =
+                                                      await boundary?.toImage();
+                                                  final byteData =
+                                                      await image?.toByteData(
+                                                          format:
+                                                              ImageByteFormat
+                                                                  .png);
+                                                  final imageBytes = byteData
+                                                      ?.buffer
+                                                      .asUint8List();
+
+                                                  if (imageBytes != null) {
+                                                    state.pdf.addPage(pw.Page(
+                                                        build: (pw.Context
+                                                            context) {
+                                                      final image =
+                                                          pw.MemoryImage(
+                                                        imageBytes,
+                                                      );
+                                                      print("sucesss fule");
+                                                      return pw.Center(
+                                                        child: pw.Image(image),
+                                                      ); // Center
+                                                    }));
+
+                                                    Directory appDocDirectory =
+                                                        await getApplicationDocumentsDirectory();
+
+                                                    Directory(appDocDirectory
+                                                                .path +
+                                                            '/' +
+                                                            'data')
+                                                        .create(recursive: true)
+                                                        // The created directory is returned as a Future.
+                                                        .then((Directory
+                                                            directory) async {
+                                                      print(
+                                                          'Path of New Dir: ' +
+                                                              directory.path);
+
+                                                      final file = await File(
+                                                              "${directory.path}/test.pdf")
+                                                          .create();
+                                                      await file.writeAsBytes(
+                                                          await state.pdf
+                                                              .save());
+                                                      Get.toNamed(
+                                                        RouteConfig.view_plan,
+                                                        arguments: {
+                                                          "file": file.path,
+                                                        },
+                                                      );
+                                                    });
+
+                                                    // final directory =
+                                                    //     await getApplicationDocumentsDirectory();
+                                                    // final imagePath = await File(
+                                                    //         '${directory.path}/container_image.png')
+                                                    //     .create();
+                                                    // await imagePath
+                                                    //     .writeAsBytes(
+                                                    //         imageBytes);
+                                                  }
+                                                },
+
+                                                // onPressed: () async {
+                                                //   state.isVisible.value = false;
+                                                //   print("Yo delano");
+                                                //   await state
+                                                //       .screenshotController
+                                                //       .capture()
+                                                //       .then((imageByte) {
+                                                //     state.isVisible.value =
+                                                //         false;
+
+                                                //     state.pdf.addPage(pw.Page(
+                                                //         build: (pw.Context
+                                                //             context) {
+                                                //       final image =
+                                                //           pw.MemoryImage(
+                                                //         imageByte!,
+                                                //       );
+                                                //       print("sucesss fule");
+                                                //       return pw.Center(
+                                                //         child: pw.Image(image),
+                                                //       ); // Center
+                                                //     }));
+                                                //   }).catchError((onError) {
+                                                //     print(onError);
+                                                //   });
+
+                                                //   Directory appDocDirectory =
+                                                //       await getApplicationDocumentsDirectory();
+
+                                                //   Directory(
+                                                //           appDocDirectory.path +
+                                                //               '/' +
+                                                //               'data')
+                                                //       .create(recursive: true)
+                                                //       // The created directory is returned as a Future.
+                                                //       .then((Directory
+                                                //           directory) async {
+                                                //     print('Path of New Dir: ' +
+                                                //         directory.path);
+
+                                                //     final file = await File(
+                                                //             "${directory.path}/test.pdf")
+                                                //         .create();
+                                                //     await file.writeAsBytes(
+                                                //         await state.pdf.save());
+                                                //     Get.toNamed(
+                                                //       RouteConfig.view_plan,
+                                                //       arguments: {
+                                                //         "file": file.path,
+                                                //       },
+                                                //     );
+                                                //   });
+                                                // },
+
+                                                child: const Text("continuer"),
+                                              )
+                                            : Container(),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
                             ],
                           ),
                         ),
-                      ),
-                    );
-                  }),
-                ],
-              );
-      }),
+                      );
+                    }),
+                  ],
+                );
+        }),
+      ),
     )
         // // Obx(() {
         //   return state.isLoadCurrentPosition.value
@@ -285,8 +490,8 @@ class _MainPageState extends State<MainPage> {
         ),
       );
       state.position.value = Marker(
-        markerId: MarkerId("current_position"),
-        infoWindow: InfoWindow(
+        markerId: const MarkerId("current_position"),
+        infoWindow: const InfoWindow(
           title: 'Zone selectioner',
           snippet: "Le plan va etre generer a partir de ce point",
         ),
@@ -306,31 +511,18 @@ class _MainPageState extends State<MainPage> {
   }
 
   Future<void> _handlePressButton() async {
-    // show input autocomplete with selected mode
-    // then get the Prediction selected
-    // Prediction? p = await PlacesAutocomplete.show(
-    //   offset: 0,
-    //   radius: 1000,
-    //   strictbounds: false,
-    //   region: "fr",
-    //   // language: "en",
-    //   context: context,
-    //   mode: Mode.overlay,
-    //   apiKey: state.kGoogleApiKey,
-    //   components: [new Component(Component.country, "fr")],
-    //   types: ["(cities)"],
-    //   hint: "Chercher une ville...",
-    // );
     Prediction? p = await PlacesAutocomplete.show(
       context: context,
       apiKey: state.kGoogleApiKey,
       onError: onError,
       strictbounds: false,
       mode: Mode.overlay,
-      types: ["(cities)"],
+      types: [
+        // "(cities)"
+      ],
       language: "fr",
       decoration: InputDecoration(
-        hintText: 'Search',
+        hintText: 'Selectionez un lieu',
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20),
           borderSide: const BorderSide(
@@ -341,5 +533,41 @@ class _MainPageState extends State<MainPage> {
       components: [Component(Component.country, "cm")],
     );
     displayPrediction(p, context);
+  }
+}
+
+class IconButton extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onpress;
+
+  const IconButton({
+    Key? key,
+    required this.icon,
+    required this.onpress,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        vertical: 10,
+      ),
+      child: InkWell(
+        onTap: onpress,
+        child: Container(
+          height: 30,
+          width: 30,
+          decoration: BoxDecoration(
+            color: AppColor.primary,
+            borderRadius: BorderRadius.circular(50),
+            boxShadow: AppShadow.boxShadow,
+          ),
+          child: Icon(
+            icon,
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
   }
 }

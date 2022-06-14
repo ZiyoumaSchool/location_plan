@@ -19,8 +19,8 @@ class MainLogic extends GetxController {
           LatLng(value.latitude ?? 3.850761, value.longitude ?? 11.495295);
 
       state.position.value = Marker(
-        markerId: MarkerId("current_position"),
-        infoWindow: InfoWindow(
+        markerId: const MarkerId("current_position"),
+        infoWindow: const InfoWindow(
           title: 'Zone selectioner',
           snippet: "*",
         ),
@@ -33,22 +33,18 @@ class MainLogic extends GetxController {
     });
   }
 
-  Future<Null> displayPrediction(Prediction p) async {
-    print("delano roosvelt");
+  void incrementZone() {
+    if (state.percentZone.value + 1 < state.maxZoneValue) {
+      state.percentZone.value++;
+      print(state.percentZone.value);
+    }
+  }
 
-    if (p != null) {
-      PlacesDetailsResponse detail =
-          await state.places.getDetailsByPlaceId(p.placeId!);
-
-      var placeId = p.placeId;
-      if (detail.result.geometry != null) {
-        state.currentPos.value = LatLng(detail.result.geometry!.location.lat,
-            detail.result.geometry!.location.lng);
-      }
-
-      // var address = await Geocoder.local.findAddressesFromQuery(p.description);
-      print(state.currentPos.value);
-      update();
+  void decrementZone() {
+    print(state.percentZone.value - 1 > state.minZoneValue);
+    if (state.percentZone.value - 1 > state.minZoneValue) {
+      state.percentZone.value--;
+      print(state.percentZone.value);
     }
   }
 }

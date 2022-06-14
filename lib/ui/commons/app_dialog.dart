@@ -39,7 +39,7 @@ class AppDialog {
     DateTime? minTime,
     DateTime? maxTime,
     DateChangedCallback? onConfirm,
-    locale: LocaleType.en,
+    locale = LocaleType.en,
     DateTime? currentTime,
   }) {
     DatePicker.showDatePicker(
@@ -49,7 +49,7 @@ class AppDialog {
       onConfirm: onConfirm,
       locale: LocaleType.vi,
       currentTime: currentTime,
-      theme: DatePickerTheme(),
+      theme: const DatePickerTheme(),
     );
   }
 
@@ -58,7 +58,7 @@ class AppDialog {
     DateTime? minTime,
     DateTime? maxTime,
     DateChangedCallback? onConfirm,
-    locale: LocaleType.en,
+    locale = LocaleType.en,
     DateTime? currentTime,
   }) {
     DatePicker.showDateTimePicker(
@@ -68,7 +68,7 @@ class AppDialog {
       onConfirm: onConfirm,
       locale: LocaleType.vi,
       currentTime: currentTime,
-      theme: DatePickerTheme(),
+      theme: const DatePickerTheme(),
     );
   }
 }

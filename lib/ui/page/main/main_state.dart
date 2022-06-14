@@ -1,7 +1,18 @@
 part of main_page;
 
 class MainState {
+  var isVisible = true.obs;
+  var key = GlobalKey();
+
+  late PageController pageController;
+  late double currentPageValue;
+
+  File? image;
+
   late TextEditingController searchController;
+  late ScreenshotController screenshotController;
+
+  late pw.Document pdf;
 
   var kGoogleApiKey = "AIzaSyDMvPHsbM0l51gW4shfWTHMUD-8Df-2UKU";
 
@@ -11,8 +22,9 @@ class MainState {
   late locate.Location location;
   late locate.LocationData currentPosition;
   late RxnDouble radius;
+  RxDouble percentZone = 100.0.obs;
 
-  Rx<Marker> position = Rx<Marker>(Marker(
+  Rx<Marker> position = Rx<Marker>(const Marker(
     markerId: MarkerId("current_position"),
     infoWindow: InfoWindow(
       title: 'Zone selectioner',
@@ -23,13 +35,17 @@ class MainState {
   double maxValue = 25;
   double minValue = 13;
 
+  double maxZoneValue = 100;
+  double minZoneValue = 0;
+  double initZoneValue = 100;
+
   double initAnimateMinValue = 5.69;
   double initAnimateMaxValue = 5.69;
   RxDouble initAnimateRadius = RxDouble(5.69);
   RxBool isInitAnimate = RxBool(false);
 
   Rx<LatLng> currentPos = Rx<LatLng>(
-    LatLng(3.850761, 11.495295),
+    const LatLng(3.850761, 11.495295),
   );
 
   RxBool isLoadCurrentPosition = RxBool(false);
@@ -44,5 +60,9 @@ class MainState {
     location = locate.Location();
     radius = RxnDouble(null);
     searchController = TextEditingController();
+    pageController = PageController();
+    currentPageValue = 0.0;
+    screenshotController = ScreenshotController();
+    pdf = pw.Document();
   }
 }

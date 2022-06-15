@@ -56,6 +56,7 @@ class _MainStaticPageState extends State<MainStaticPage> {
           IconButton(
             onPressed: () async {
               await logic.printMap();
+              // await printMap();
             },
             icon: Icon(Icons.print),
           ),

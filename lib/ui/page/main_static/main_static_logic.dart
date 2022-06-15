@@ -195,10 +195,12 @@ class MainStaticLogic extends GetxController {
       markers: state.markers,
     );
 
-    String url = controller.url.toString();
-    final netImage = await networkImage(url);
+    String mapUrl = controller.url.toString();
+    String urlIcon =
+        "https://ziyouma-agency.com/wp-content/uploads/2021/08/logo-site-header.png";
 
-    print(url);
+    final mapImage = await networkImage(mapUrl);
+    final iconImage = await networkImage(urlIcon);
 
     var document = pw.Document();
     document.addPage(
@@ -209,51 +211,227 @@ class MainStaticLogic extends GetxController {
             base: await PdfGoogleFonts.openSansRegular(),
             bold: await PdfGoogleFonts.openSansBold(),
           ),
-          // buildForeground: bg == null
-          //     ? null
-          //     : (context) =>
-          //         pw.FullPage(ignoreMargins: true, child: pw.SvgImage(svg: bg!)),
         ),
         build: (context) => pw.Padding(
-          padding: const pw.EdgeInsets.only(right: 20),
-          child: pw.Container(
-            height: 1000,
-            width: 700,
-            child: pw.Column(
-              children: [
-                pw.Align(
-                    child: pw.Text("delano Roosvelt"),
-                    alignment: pw.Alignment.topCenter),
-                pw.Row(
-                  children: [
-                    pw.Column(
+          padding: const pw.EdgeInsets.all(5),
+          child: pw.Column(
+            children: [
+              pw.Padding(
+                padding: const pw.EdgeInsets.only(bottom: 20),
+                child: pw.Align(
+                  child: pw.Text(
+                    "Plan de localisation",
+                    style: pw.TextStyle(
+                      fontSize: 25,
+                      fontWeight: pw.FontWeight.bold,
+                      decoration: pw.TextDecoration.underline,
+                    ),
+                  ),
+                  alignment: pw.Alignment.topCenter,
+                ),
+              ),
+              pw.Row(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  pw.Expanded(
+                    flex: 1,
+                    child: pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
                       children: [
-                        pw.Text("delano Roosvelt"),
-                        pw.Text("delano Roosvelt"),
-                        pw.Text("delano Roosvelt"),
-                        pw.Text("delano Roosvelt"),
-                        pw.Text("delano Roosvelt"),
+                        pw.Text(
+                          "Information",
+                          style: pw.TextStyle(
+                            fontSize: 20,
+                            fontWeight: pw.FontWeight.bold,
+                          ),
+                        ),
+                        pw.SizedBox(
+                          height: 5,
+                        ),
+                        pw.Row(
+                          children: [
+                            pw.Text("Nom: "),
+                            pw.Text(
+                              "delano Roosvelt",
+                              style: pw.TextStyle(
+                                fontWeight: pw.FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        pw.Row(
+                          children: [
+                            pw.Text("Prenom: "),
+                            pw.Text(
+                              "delano Roosvelt",
+                              style: pw.TextStyle(
+                                fontWeight: pw.FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        pw.Row(
+                          children: [
+                            pw.Text("Telephone: "),
+                            pw.Text(
+                              "6 76 19 87 45",
+                              style: pw.TextStyle(
+                                fontWeight: pw.FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        pw.Row(
+                          crossAxisAlignment: pw.CrossAxisAlignment.start,
+                          children: [
+                            pw.Text("Description: "),
+                            pw.Expanded(
+                              child: pw.Text(
+                                "delano Roosvelt daskbl da sjds a;lkcalbv fl ;svfskjv ldabkjbvs dfjklsbvlkf jdsb lvkflsdjv bfd;sv f dl;svdf sd;s lfdblfds;lbk",
+                                style: pw.TextStyle(
+                                  fontWeight: pw.FontWeight.bold,
+                                ),
+                                softWrap: true,
+                              ),
+                            ),
+                          ],
+                        ),
+                        pw.CustomPaint(
+                          size: const PdfPoint(10, 10),
+                          painter: (PdfGraphics canvas, PdfPoint size) {
+                            canvas
+                              ..moveTo(0, 0)
+                              ..lineTo(350, 0)
+                              ..setColor(PdfColors.grey200)
+                              ..strokePath();
+                          },
+                        ),
+                        pw.SizedBox(
+                          height: 10,
+                        ),
+                        pw.Text(
+                          "Legende",
+                          style: pw.TextStyle(
+                            fontSize: 20,
+                            fontWeight: pw.FontWeight.bold,
+                          ),
+                        ),
+                        pw.SizedBox(
+                          height: 10,
+                        ),
+                        pw.Row(
+                          crossAxisAlignment: pw.CrossAxisAlignment.center,
+                          children: [
+                            pw.Container(
+                              color: PdfColors.green,
+                              height: 10,
+                              width: 10,
+                            ),
+                            pw.Expanded(
+                              child: pw.Text(
+                                "  Point d'arrivé (A)",
+                                style: pw.TextStyle(
+                                  fontWeight: pw.FontWeight.bold,
+                                ),
+                                softWrap: true,
+                              ),
+                            ),
+                          ],
+                        ),
+                        pw.Row(
+                          crossAxisAlignment: pw.CrossAxisAlignment.center,
+                          children: [
+                            pw.Container(
+                              color: PdfColors.blue,
+                              height: 10,
+                              width: 10,
+                            ),
+                            pw.Expanded(
+                              child: pw.Text(
+                                "  Point de départ (D)",
+                                style: pw.TextStyle(
+                                  fontWeight: pw.FontWeight.bold,
+                                ),
+                                softWrap: true,
+                              ),
+                            ),
+                          ],
+                        ),
+                        pw.Row(
+                          crossAxisAlignment: pw.CrossAxisAlignment.center,
+                          children: [
+                            pw.Padding(
+                              padding: pw.EdgeInsets.only(
+                                bottom: 20,
+                              ),
+                            ),
+                            pw.CustomPaint(
+                              size: const PdfPoint(10, 10),
+                              painter: (PdfGraphics canvas, PdfPoint size) {
+                                canvas
+                                  ..moveTo(0, 0)
+                                  ..lineTo(10, 0)
+                                  ..setColor(PdfColors.blue)
+                                  ..strokePath();
+                              },
+                            ),
+                            pw.Expanded(
+                              child: pw.Text(
+                                "  Chemin a suivre",
+                                style: pw.TextStyle(
+                                  fontWeight: pw.FontWeight.bold,
+                                ),
+                                softWrap: true,
+                              ),
+                            ),
+                          ],
+                        ),
+                        pw.CustomPaint(
+                          size: const PdfPoint(10, 10),
+                          painter: (PdfGraphics canvas, PdfPoint size) {
+                            canvas
+                              ..moveTo(0, 0)
+                              ..lineTo(350, 0)
+                              ..setColor(PdfColors.grey200)
+                              ..strokePath();
+                          },
+                        ),
+                        pw.SizedBox(
+                          height: 20,
+                        ),
+                        pw.Align(
+                          alignment: pw.Alignment.center,
+                          child: pw.BarcodeWidget(
+                            data:
+                                "{'lat': ${state.originPoint.latitude}, 'lng': ${state.originPoint.longitude}}",
+                            barcode: pw.Barcode.qrCode(),
+                            width: 200,
+                            height: 100,
+                          ),
+                        ),
+                        pw.SizedBox(
+                          height: 20,
+                        ),
+                        pw.Image(
+                          iconImage,
+                          width: 60,
+                        ),
                       ],
                     ),
-                    pw.Image(netImage),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                  pw.Expanded(
+                    child: pw.Image(
+                      mapImage,
+                      width: 350,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),
     );
-
-    // state.pdf.addPage(
-    //   pw.Page(
-    //     build: (pw.Context context) {
-    //       return pw.Center(
-    //         child: pw.Image(netImage),
-    //       ); // Center
-    //     },
-    //   ),
-    // ); // Page
 
     Directory appDocDirectory = await getApplicationDocumentsDirectory();
 
@@ -278,6 +456,5 @@ class MainStaticLogic extends GetxController {
     }).catchError((error) {
       print(error.toString());
     });
-    // });
   }
 }

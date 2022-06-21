@@ -3,33 +3,51 @@ part of main_static;
 class MainStaticLogic extends GetxController {
   final MainStaticState state = MainStaticState();
 
-  MainStaticLogic({required gm.LatLng originPoint}) {
+  MainStaticLogic({required gm.LatLng originPoint, double zoom = 17}) {
     state.originPoint = originPoint;
+    state.zoom.value = zoom.toInt();
+    print("==============+> ${state.zoom.value}");
   }
 
   @override
-  onInit() {
+  onInit() async {
     //Make green circle for origin place
-    state.paths.add(
-      static_map.Path.circle(
-        center: static_map.Location(
-            state.originPoint.latitude, state.originPoint.longitude),
-        color: Colors.green.withOpacity(0.8),
-        fillColor: Colors.green.withOpacity(0.4),
-        encoded: true, // encode using encoded polyline algorithm
-        radius: 150, // meters
-      ),
-    );
+    // state.paths.add(
+    //   static_map.Path.circle(
+    //     center: static_map.Location(
+    //         state.originPoint.latitude, state.originPoint.longitude),
+    //     color: Colors.green.withOpacity(0.8),
+    //     fillColor: Colors.green.withOpacity(0.4),
+    //     encoded: true, // encode using encoded polyline algorithm
+    //     radius: 150, // meters
+    //   ),
+    // );
 
     // configure origin marker
+    // final ByteData imageData = await NetworkAssetBundle(
+    //         Uri.parse("https://img.icons8.com/emoji/96/000000/house-emoji.png"))
+    //     .load("");
+    // final Uint8List bytes = imageData.buffer.asUint8List();
+
+    // gm.BitmapDescriptor customIcon = gm.BitmapDescriptor.fromBytes(bytes);
+    //   await MarkerIcon.downloadResizePictureCircle(
+    // 'https://thegpscoordinates.net/photos/la/tehran_iran_5u679ezi8f.jpg',
+    //  size: 150,
+    //  addBorder: true,
+    //  borderColor: Colors.white,
+    //  borderSize: 15);
+    // https://img.icons8.com/emoji/96/000000/house-emoji.png
+
     state.markers.value.add(
-      static_map.Marker(
+      static_map.Marker.custom(
+        anchor: static_map.MarkerAnchor.center,
+        icon: "https://rb.gy/cmmtmb",
         locations: [
           static_map.Location(
-              state.originPoint.latitude, state.originPoint.longitude),
+            state.originPoint.latitude,
+            state.originPoint.longitude,
+          ),
         ],
-        color: Colors.green,
-        label: "A",
       ),
     );
   }
@@ -96,16 +114,16 @@ class MainStaticLogic extends GetxController {
       );
 
       //Make cyan circle for destination place
-      state.paths.add(
-        static_map.Path.circle(
-          center: static_map.Location(
-              destinationPoint.latitude, destinationPoint.longitude),
-          color: Colors.blue.withOpacity(0.8),
-          fillColor: Colors.blue.withOpacity(0.4),
-          encoded: true, // encode using encoded polyline algorithm
-          radius: 120, // meters
-        ),
-      );
+      // state.paths.add(
+      //   static_map.Path.circle(
+      //     center: static_map.Location(
+      //         destinationPoint.latitude, destinationPoint.longitude),
+      //     color: Colors.blue.withOpacity(0.8),
+      //     fillColor: Colors.blue.withOpacity(0.4),
+      //     encoded: true, // encode using encoded polyline algorithm
+      //     radius: 120, // meters
+      //   ),
+      // );
 
       // // add destination points
       // var location = Location(

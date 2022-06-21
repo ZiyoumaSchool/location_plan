@@ -2,7 +2,9 @@ library main_static;
 
 import 'dart:io';
 import 'dart:math';
+import 'dart:typed_data';
 
+import 'package:custom_marker/marker_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
@@ -42,7 +44,9 @@ class MainStaticPage extends StatefulWidget {
 class _MainStaticPageState extends State<MainStaticPage> {
   final logic = Get.put(
     MainStaticLogic(
-      originPoint: gm.LatLng(3.8567078373302763, 11.49633987211502),
+      originPoint: Get.arguments["origin"] as gm.LatLng,
+      zoom: Get.arguments["zoom"] as double,
+      // originPoint: gm.LatLng(3.8538009395394046, 11.489106018821056),
     ),
   );
 
@@ -87,52 +91,52 @@ class _MainStaticPageState extends State<MainStaticPage> {
                       );
                     }),
                   ),
-                  Expanded(
-                    flex: 2,
-                    child: Container(
-                      // height: 100,
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(10),
-                          topRight: Radius.circular(10),
-                        ),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Align(
-                            child: Text("Liste des point de depart"),
-                            alignment: Alignment.topLeft,
-                          ),
-                          Obx(
-                            () {
-                              return SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  children: state.destinationPoints
-                                      .map(
-                                        (element) => Padding(
-                                          padding: EdgeInsets.only(right: 5.0),
-                                          child: CardCity(
-                                            place: element,
-                                            press: () {
-                                              logic.deletePoint(element);
-                                              setState(() {});
-                                            },
-                                          ),
-                                        ),
-                                      )
-                                      .toList(),
-                                ),
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
+                  // Expanded(
+                  //   flex: 2,
+                  //   child: Container(
+                  //     // height: 100,
+                  //     padding: EdgeInsets.all(8),
+                  //     decoration: BoxDecoration(
+                  //       color: Colors.white,
+                  //       borderRadius: BorderRadius.only(
+                  //         topLeft: Radius.circular(10),
+                  //         topRight: Radius.circular(10),
+                  //       ),
+                  //     ),
+                  //     child: Column(
+                  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //       children: [
+                  //         Align(
+                  //           child: Text("Liste des point de depart"),
+                  //           alignment: Alignment.topLeft,
+                  //         ),
+                  //         Obx(
+                  //           () {
+                  //             return SingleChildScrollView(
+                  //               scrollDirection: Axis.horizontal,
+                  //               child: Row(
+                  //                 children: state.destinationPoints
+                  //                     .map(
+                  //                       (element) => Padding(
+                  //                         padding: EdgeInsets.only(right: 5.0),
+                  //                         child: CardCity(
+                  //                           place: element,
+                  //                           press: () {
+                  //                             logic.deletePoint(element);
+                  //                             setState(() {});
+                  //                           },
+                  //                         ),
+                  //                       ),
+                  //                     )
+                  //                     .toList(),
+                  //               ),
+                  //             );
+                  //           },
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // )
                 ],
               );
             },
@@ -166,34 +170,34 @@ class _MainStaticPageState extends State<MainStaticPage> {
               }),
             ),
           ),
-          Positioned(
-            bottom: 40,
-            right: 10,
-            child: GestureDetector(
-              onTap: _handlePressButton,
-              child: Container(
-                padding: EdgeInsets.all(4),
-                height: 50,
-                width: 50,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(40),
-                  color: Colors.white,
-                ),
-                child: Container(
-                  height: 40,
-                  width: 40,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(40),
-                    color: AppColor.primary,
-                  ),
-                  child: Icon(
-                    Icons.add,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-          ),
+          // Positioned(
+          //   bottom: 40,
+          //   right: 10,
+          //   child: GestureDetector(
+          //     onTap: _handlePressButton,
+          //     child: Container(
+          //       padding: EdgeInsets.all(4),
+          //       height: 50,
+          //       width: 50,
+          //       decoration: BoxDecoration(
+          //         borderRadius: BorderRadius.circular(40),
+          //         color: Colors.white,
+          //       ),
+          //       child: Container(
+          //         height: 40,
+          //         width: 40,
+          //         decoration: BoxDecoration(
+          //           borderRadius: BorderRadius.circular(40),
+          //           color: AppColor.primary,
+          //         ),
+          //         child: Icon(
+          //           Icons.add,
+          //           color: Colors.white,
+          //         ),
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );

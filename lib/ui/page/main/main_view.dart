@@ -192,52 +192,53 @@ class _MainPageState extends State<MainPage> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Align(
-                                alignment: Alignment.bottomRight,
-                                child: Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 20),
-                                  // height: 500,
-                                  width: 40,
-                                  child: Column(
-                                    children: [
-                                      IconButton(
-                                        icon: Icons.add,
-                                        onpress: logic.incrementZone,
-                                      ),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        height: state.radius.value != null
-                                            ? 330
-                                            : 400,
-                                        child: SfSlider.vertical(
-                                          min: state.minZoneValue,
-                                          max: state.maxZoneValue,
-                                          value: state.percentZone.value,
-                                          interval: 20,
-                                          showTicks: true,
-                                          // showLabels: true,
-                                          //  showTooltip: true,
-                                          minorTicksPerInterval: 1,
-                                          onChanged: (dynamic value) {
-                                            print(value);
-                                            state.percentZone.value = value;
-                                            print("change values");
-                                          },
-                                        ),
-                                      ),
-                                      IconButton(
-                                        icon: Icons.remove,
-                                        onpress: logic.decrementZone,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
+                              // Align(
+                              //   alignment: Alignment.bottomRight,
+                              //   child: Container(
+                              //     margin: const EdgeInsets.symmetric(
+                              //         horizontal: 20),
+                              //     // height: 500,
+                              //     width: 40,
+                              //     child: Column(
+                              //       children: [
+                              //         IconButton(
+                              //           icon: Icons.add,
+                              //           onpress: logic.incrementZone,
+                              //         ),
+                              //         Container(
+                              //           decoration: BoxDecoration(
+                              //             color: Colors.white,
+                              //             borderRadius:
+                              //                 BorderRadius.circular(10),
+                              //           ),
+                              //           height: state.radius.value != null
+                              //               ? 330
+                              //               : 400,
+                              //           child: SfSlider.vertical(
+                              //             min: state.minZoneValue,
+                              //             max: state.maxZoneValue,
+                              //             value: state.percentZone.value,
+                              //             interval: 20,
+                              //             showTicks: true,
+                              //             // showLabels: true,
+                              //             //  showTooltip: true,
+                              //             minorTicksPerInterval: 1,
+                              //             onChanged: (dynamic value) {
+                              //               print(value);
+                              //               state.percentZone.value = value;
+                              //               print("change values");
+                              //             },
+                              //           ),
+                              //         ),
+                              //         IconButton(
+                              //           icon: Icons.remove,
+                              //           onpress: logic.decrementZone,
+                              //         ),
+                              //       ],
+                              //     ),
+                              //   ),
+                              // ),
+
                               Container(
                                 height: state.radius.value == null ? 90 : 140,
                                 padding: const EdgeInsets.all(10),
@@ -301,129 +302,24 @@ class _MainPageState extends State<MainPage> {
                                                   primary: AppColor.primary,
                                                 ),
                                                 onPressed: () async {
-                                                  final boundary = state
-                                                          .key.currentContext
-                                                          ?.findRenderObject()
-                                                      as RenderRepaintBoundary?;
-                                                  final image =
-                                                      await boundary?.toImage();
-                                                  final byteData =
-                                                      await image?.toByteData(
-                                                          format:
-                                                              ImageByteFormat
-                                                                  .png);
-                                                  final imageBytes = byteData
-                                                      ?.buffer
-                                                      .asUint8List();
-
-                                                  if (imageBytes != null) {
-                                                    state.pdf.addPage(pw.Page(
-                                                        build: (pw.Context
-                                                            context) {
-                                                      final image =
-                                                          pw.MemoryImage(
-                                                        imageBytes,
-                                                      );
-                                                      print("sucesss fule");
-                                                      return pw.Center(
-                                                        child: pw.Image(image),
-                                                      ); // Center
-                                                    }));
-
-                                                    Directory appDocDirectory =
-                                                        await getApplicationDocumentsDirectory();
-
-                                                    Directory(appDocDirectory
-                                                                .path +
-                                                            '/' +
-                                                            'data')
-                                                        .create(recursive: true)
-                                                        // The created directory is returned as a Future.
-                                                        .then((Directory
-                                                            directory) async {
-                                                      print(
-                                                          'Path of New Dir: ' +
-                                                              directory.path);
-
-                                                      final file = await File(
-                                                              "${directory.path}/test.pdf")
-                                                          .create();
-                                                      await file.writeAsBytes(
-                                                          await state.pdf
-                                                              .save());
-                                                      Get.toNamed(
-                                                        RouteConfig.view_plan,
-                                                        arguments: {
-                                                          "file": file.path,
-                                                        },
-                                                      );
-                                                    });
-
-                                                    // final directory =
-                                                    //     await getApplicationDocumentsDirectory();
-                                                    // final imagePath = await File(
-                                                    //         '${directory.path}/container_image.png')
-                                                    //     .create();
-                                                    // await imagePath
-                                                    //     .writeAsBytes(
-                                                    //         imageBytes);
-                                                  }
+                                                  Get.toNamed(
+                                                    RouteConfig.main_static,
+                                                    arguments: {
+                                                      "origin": state
+                                                          .currentPos.value,
+                                                      "zoom":
+                                                          state.radius.value ??
+                                                              state.minValue,
+                                                    },
+                                                  );
+                                                  //   Get.toNamed(
+                                                  //     RouteConfig.view_plan,
+                                                  //     arguments: {
+                                                  //       "file": file.path,
+                                                  //     },
+                                                  //   );
+                                                  // });
                                                 },
-
-                                                // onPressed: () async {
-                                                //   state.isVisible.value = false;
-                                                //   print("Yo delano");
-                                                //   await state
-                                                //       .screenshotController
-                                                //       .capture()
-                                                //       .then((imageByte) {
-                                                //     state.isVisible.value =
-                                                //         false;
-
-                                                //     state.pdf.addPage(pw.Page(
-                                                //         build: (pw.Context
-                                                //             context) {
-                                                //       final image =
-                                                //           pw.MemoryImage(
-                                                //         imageByte!,
-                                                //       );
-                                                //       print("sucesss fule");
-                                                //       return pw.Center(
-                                                //         child: pw.Image(image),
-                                                //       ); // Center
-                                                //     }));
-                                                //   }).catchError((onError) {
-                                                //     print(onError);
-                                                //   });
-
-                                                //   Directory appDocDirectory =
-                                                //       await getApplicationDocumentsDirectory();
-
-                                                //   Directory(
-                                                //           appDocDirectory.path +
-                                                //               '/' +
-                                                //               'data')
-                                                //       .create(recursive: true)
-                                                //       // The created directory is returned as a Future.
-                                                //       .then((Directory
-                                                //           directory) async {
-                                                //     print('Path of New Dir: ' +
-                                                //         directory.path);
-
-                                                //     final file = await File(
-                                                //             "${directory.path}/test.pdf")
-                                                //         .create();
-                                                //     await file.writeAsBytes(
-                                                //         await state.pdf.save());
-                                                //     Get.toNamed(
-                                                //       RouteConfig.view_plan,
-                                                //       arguments: {
-                                                //         "file": file.path,
-                                                //       },
-                                                //     );
-                                                //   });
-                                                // },
-
                                                 child: const Text("continuer"),
                                               )
                                             : Container(),

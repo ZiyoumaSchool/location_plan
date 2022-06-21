@@ -100,7 +100,7 @@ class OnboarddingPage extends StatelessWidget {
               text: state.percent.value == 1.0 ? "Terminer" : "Passer",
               press: () {
                 if (state.percent.value == 1.0) {
-                  Get.offAllNamed(RouteConfig.main_static);
+                  Get.offAllNamed(RouteConfig.main);
                 }
               },
             ),

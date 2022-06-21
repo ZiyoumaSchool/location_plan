@@ -33,7 +33,7 @@ class MainState {
   ));
 
   double maxValue = 25;
-  double minValue = 13;
+  double minValue = 17;
 
   double maxZoneValue = 100;
   double minZoneValue = 0;

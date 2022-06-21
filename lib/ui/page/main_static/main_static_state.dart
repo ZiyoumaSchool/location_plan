@@ -13,9 +13,9 @@ class MainStaticState {
   RxList<PlaceDetails> destinationPoints = <PlaceDetails>[].obs;
 
   // this is zoom value
-  RxInt zoom = 15.obs;
-  RxInt minZoom = 10.obs;
-  RxInt maxZoom = 20.obs;
+  RxInt zoom = 17.obs;
+  RxInt minZoom = 17.obs;
+  RxInt maxZoom = 30.obs;
   // Radius for point
   RxInt radiusOrigin = 150.obs;
   RxInt radiusDest = 120.obs;

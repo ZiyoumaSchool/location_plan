@@ -20,6 +20,12 @@ class MainStaticState {
   RxInt radiusOrigin = 150.obs;
   RxInt radiusDest = 120.obs;
 
+  late TextEditingController titleController;
+  late TextEditingController nameController;
+  late TextEditingController surnameController;
+  late TextEditingController phoneController;
+  late TextEditingController describeController;
+
   late pw.Document pdf;
 
   // This is origin point
@@ -33,5 +39,11 @@ class MainStaticState {
     paths = <static_map.Path>[].obs;
     markers = <static_map.Marker>[].obs;
     pdf = pw.Document();
+
+    titleController = TextEditingController();
+    nameController = TextEditingController();
+    surnameController = TextEditingController();
+    phoneController = TextEditingController();
+    describeController = TextEditingController();
   }
 }

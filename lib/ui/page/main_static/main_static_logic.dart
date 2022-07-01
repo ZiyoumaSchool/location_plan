@@ -238,7 +238,7 @@ class MainStaticLogic extends GetxController {
                 padding: const pw.EdgeInsets.only(bottom: 20),
                 child: pw.Align(
                   child: pw.Text(
-                    "Plan de localisation",
+                    state.titleController.text,
                     style: pw.TextStyle(
                       fontSize: 25,
                       fontWeight: pw.FontWeight.bold,
@@ -270,7 +270,7 @@ class MainStaticLogic extends GetxController {
                           children: [
                             pw.Text("Nom: "),
                             pw.Text(
-                              "delano Roosvelt",
+                              state.nameController.text,
                               style: pw.TextStyle(
                                 fontWeight: pw.FontWeight.bold,
                               ),
@@ -281,7 +281,7 @@ class MainStaticLogic extends GetxController {
                           children: [
                             pw.Text("Prenom: "),
                             pw.Text(
-                              "delano Roosvelt",
+                              state.surnameController.text,
                               style: pw.TextStyle(
                                 fontWeight: pw.FontWeight.bold,
                               ),
@@ -292,28 +292,29 @@ class MainStaticLogic extends GetxController {
                           children: [
                             pw.Text("Telephone: "),
                             pw.Text(
-                              "6 76 19 87 45",
+                              state.phoneController.text,
                               style: pw.TextStyle(
                                 fontWeight: pw.FontWeight.bold,
                               ),
                             ),
                           ],
                         ),
-                        pw.Row(
-                          crossAxisAlignment: pw.CrossAxisAlignment.start,
-                          children: [
-                            pw.Text("Description: "),
-                            pw.Expanded(
-                              child: pw.Text(
-                                "delano Roosvelt daskbl da sjds a;lkcalbv fl ;svfskjv ldabkjbvs dfjklsbvlkf jdsb lvkflsdjv bfd;sv f dl;svdf sd;s lfdblfds;lbk",
-                                style: pw.TextStyle(
-                                  fontWeight: pw.FontWeight.bold,
+                        if (state.describeController.text.isNotEmpty)
+                          pw.Row(
+                            crossAxisAlignment: pw.CrossAxisAlignment.start,
+                            children: [
+                              pw.Text("Description: "),
+                              pw.Expanded(
+                                child: pw.Text(
+                                  state.describeController.text,
+                                  style: pw.TextStyle(
+                                    fontWeight: pw.FontWeight.bold,
+                                  ),
+                                  softWrap: true,
                                 ),
-                                softWrap: true,
                               ),
-                            ),
-                          ],
-                        ),
+                            ],
+                          ),
                         pw.CustomPaint(
                           size: const PdfPoint(10, 10),
                           painter: (PdfGraphics canvas, PdfPoint size) {
@@ -474,5 +475,68 @@ class MainStaticLogic extends GetxController {
     }).catchError((error) {
       print(error.toString());
     });
+  }
+// String? get _errorText {
+//   // at any time, we can get the text from _controller.value.text
+//   final text = _controller.value.text;
+//   // Note: you can do your own custom validation here
+//   // Move this logic this outside the widget for more testable code
+//   if (text.isEmpty) {
+//     return 'Can\'t be empty';
+//   }
+//   if (text.length < 4) {
+//     return 'Too short';
+//   }
+//   // return null if the text is valid
+//   return null;
+// }
+
+  String? get nameError {
+    final text = state.nameController.text;
+
+    if (text.isEmpty) {
+      return "Le champ nom est obligatoire";
+    }
+
+    return null;
+  }
+
+  String? get surnameError {
+    final text = state.surnameController.text;
+
+    if (text.isEmpty) {
+      return "Le champ prenom est obligatoire";
+    }
+
+    return null;
+  }
+
+  String? get titleError {
+    final text = state.titleController.text;
+
+    if (text.isEmpty) {
+      return "Le champ titre est obligatoire";
+    }
+
+    if (text.length < 5) {
+      return "Le champ titre doit avoir plus de 5 caracteres";
+    }
+
+    return null;
+  }
+
+  String? get phoneError {
+    final text = state.phoneController.text;
+
+    if (text.isEmpty) {
+      return "Le champ numero est obligatoire";
+    }
+    final RegExp regExp = RegExp("(6|2)(2|3|[5-9])[0-9]{7}");
+
+    if (!regExp.hasMatch(text)) {
+      return "Le numero de telephone est invalide";
+    }
+
+    return null;
   }
 }

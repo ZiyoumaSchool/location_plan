@@ -59,7 +59,16 @@ class _MainStaticPageState extends State<MainStaticPage> {
         actions: [
           IconButton(
             onPressed: () async {
-              await logic.printMap();
+              Get.defaultDialog(
+                title: "Informations",
+                middleText: "",
+                content: getContent(),
+                barrierDismissible: false,
+                radius: 10.0,
+                confirm: confirmBtn(),
+                cancel: cancelBtn(),
+              );
+              // await logic.printMap();
               // await printMap();
             },
             icon: Icon(Icons.print),
@@ -201,6 +210,146 @@ class _MainStaticPageState extends State<MainStaticPage> {
         ],
       ),
     );
+  }
+
+  Widget getContent() {
+    return Expanded(
+      flex: 18,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            buildTitle(),
+            SizedBox(
+              height: 10,
+            ),
+            buildName(),
+            SizedBox(
+              height: 10,
+            ),
+            buildSurname(),
+            SizedBox(
+              height: 10,
+            ),
+            buildPhone(),
+            SizedBox(
+              height: 10,
+            ),
+            TextField(
+              controller: state.describeController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: 'Entrez une description de la carte',
+              ),
+              maxLines: 5,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildName() {
+    return ValueListenableBuilder(
+      // Note: pass _controller to the animation argument
+      valueListenable: state.nameController,
+      builder: (context, TextEditingValue value, __) {
+        // this entire widget tree will rebuild every time
+        // the controller value changes
+        return TextField(
+          controller: state.nameController,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(),
+            hintText: 'Entrez votre nom',
+            errorText: logic.nameError,
+            contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget buildTitle() {
+    return ValueListenableBuilder(
+      // Note: pass _controller to the animation argument
+      valueListenable: state.titleController,
+      builder: (context, TextEditingValue value, __) {
+        // this entire widget tree will rebuild every time
+        // the controller value changes
+        return TextField(
+          controller: state.titleController,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(),
+            hintText: 'Entrez le titre de la map. Ex: Plan de localsation',
+            errorText: logic.titleError,
+            contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget buildPhone() {
+    return ValueListenableBuilder(
+      // Note: pass _controller to the animation argument
+      valueListenable: state.phoneController,
+      builder: (context, TextEditingValue value, __) {
+        // this entire widget tree will rebuild every time
+        // the controller value changes
+        return TextField(
+          controller: state.phoneController,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(),
+            hintText: 'Entrez le numero de telephone',
+            errorText: logic.phoneError,
+            contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget buildSurname() {
+    return ValueListenableBuilder(
+      // Note: pass _controller to the animation argument
+      valueListenable: state.surnameController,
+      builder: (context, TextEditingValue value, __) {
+        // this entire widget tree will rebuild every time
+        // the controller value changes
+        return TextField(
+          controller: state.surnameController,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(),
+            hintText: 'Entrez votre prenom',
+            errorText: logic.surnameError,
+            contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget confirmBtn() {
+    return ElevatedButton(
+        onPressed: () async {
+          if (logic.phoneError == null &&
+              logic.nameError == null &&
+              logic.surnameError == null &&
+              logic.titleError == null) {
+            await logic.printMap();
+          }
+          Get.back();
+        },
+        child: Text("Imprimer"));
+  }
+
+  Widget cancelBtn() {
+    return ElevatedButton(
+        onPressed: () {
+          Get.back();
+        },
+        child: Text("Annuler"));
   }
 
   Future<void> displayPrediction(Prediction? p, BuildContext context) async {

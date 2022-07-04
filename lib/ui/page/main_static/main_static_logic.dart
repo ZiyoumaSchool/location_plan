@@ -41,7 +41,7 @@ class MainStaticLogic extends GetxController {
     state.markers.value.add(
       static_map.Marker.custom(
         anchor: static_map.MarkerAnchor.center,
-        icon: "https://rb.gy/cmmtmb",
+        icon: "https://goo.gl/1oTJ9Y",
         locations: [
           static_map.Location(
             state.originPoint.latitude,
@@ -201,6 +201,8 @@ class MainStaticLogic extends GetxController {
   }
 
   printMap() async {
+    state.mapLoad(true);
+
     var controller = static_map.StaticMapController(
       center: static_map.Location(
           state.originPoint.latitude, state.originPoint.longitude),
@@ -315,108 +317,109 @@ class MainStaticLogic extends GetxController {
                               ),
                             ],
                           ),
-                        pw.CustomPaint(
-                          size: const PdfPoint(10, 10),
-                          painter: (PdfGraphics canvas, PdfPoint size) {
-                            canvas
-                              ..moveTo(0, 0)
-                              ..lineTo(350, 0)
-                              ..setColor(PdfColors.grey200)
-                              ..strokePath();
-                          },
-                        ),
+                        // pw.CustomPaint(
+                        //   size: const PdfPoint(10, 10),
+                        //   painter: (PdfGraphics canvas, PdfPoint size) {
+                        //     canvas
+                        //       ..moveTo(0, 0)
+                        //       ..lineTo(350, 0)
+                        //       ..setColor(PdfColors.grey200)
+                        //       ..strokePath();
+                        //   },
+                        // ),
+                        // pw.SizedBox(
+                        //   height: 10,
+                        // ),
+                        // pw.Text(
+                        //   "Legende",
+                        //   style: pw.TextStyle(
+                        //     fontSize: 20,
+                        //     fontWeight: pw.FontWeight.bold,
+                        //   ),
+                        // ),
+                        // pw.SizedBox(
+                        //   height: 10,
+                        // ),
+                        // pw.Row(
+                        //   crossAxisAlignment: pw.CrossAxisAlignment.center,
+                        //   children: [
+                        //     pw.Container(
+                        //       color: PdfColors.green,
+                        //       height: 10,
+                        //       width: 10,
+                        //     ),
+                        //     pw.Expanded(
+                        //       child: pw.Text(
+                        //         "  Point d'arrivé (A)",
+                        //         style: pw.TextStyle(
+                        //           fontWeight: pw.FontWeight.bold,
+                        //         ),
+                        //         softWrap: true,
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+                        // pw.Row(
+                        //   crossAxisAlignment: pw.CrossAxisAlignment.center,
+                        //   children: [
+                        //     pw.Container(
+                        //       color: PdfColors.blue,
+                        //       height: 10,
+                        //       width: 10,
+                        //     ),
+                        //     pw.Expanded(
+                        //       child: pw.Text(
+                        //         "  Point de départ (D)",
+                        //         style: pw.TextStyle(
+                        //           fontWeight: pw.FontWeight.bold,
+                        //         ),
+                        //         softWrap: true,
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+                        // pw.Row(
+                        //   crossAxisAlignment: pw.CrossAxisAlignment.center,
+                        //   children: [
+                        //     pw.Padding(
+                        //       padding: pw.EdgeInsets.only(
+                        //         bottom: 20,
+                        //       ),
+                        //     ),
+                        //     pw.CustomPaint(
+                        //       size: const PdfPoint(10, 10),
+                        //       painter: (PdfGraphics canvas, PdfPoint size) {
+                        //         canvas
+                        //           ..moveTo(0, 0)
+                        //           ..lineTo(10, 0)
+                        //           ..setColor(PdfColors.blue)
+                        //           ..strokePath();
+                        //       },
+                        //     ),
+                        //     pw.Expanded(
+                        //       child: pw.Text(
+                        //         "  Chemin a suivre",
+                        //         style: pw.TextStyle(
+                        //           fontWeight: pw.FontWeight.bold,
+                        //         ),
+                        //         softWrap: true,
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+                        // pw.CustomPaint(
+                        //   size: const PdfPoint(10, 10),
+                        //   painter: (PdfGraphics canvas, PdfPoint size) {
+                        //     canvas
+                        //       ..moveTo(0, 0)
+                        //       ..lineTo(350, 0)
+                        //       ..setColor(PdfColors.grey200)
+                        //       ..strokePath();
+                        //   },
+                        // ),
+
                         pw.SizedBox(
-                          height: 10,
-                        ),
-                        pw.Text(
-                          "Legende",
-                          style: pw.TextStyle(
-                            fontSize: 20,
-                            fontWeight: pw.FontWeight.bold,
-                          ),
-                        ),
-                        pw.SizedBox(
-                          height: 10,
-                        ),
-                        pw.Row(
-                          crossAxisAlignment: pw.CrossAxisAlignment.center,
-                          children: [
-                            pw.Container(
-                              color: PdfColors.green,
-                              height: 10,
-                              width: 10,
-                            ),
-                            pw.Expanded(
-                              child: pw.Text(
-                                "  Point d'arrivé (A)",
-                                style: pw.TextStyle(
-                                  fontWeight: pw.FontWeight.bold,
-                                ),
-                                softWrap: true,
-                              ),
-                            ),
-                          ],
-                        ),
-                        pw.Row(
-                          crossAxisAlignment: pw.CrossAxisAlignment.center,
-                          children: [
-                            pw.Container(
-                              color: PdfColors.blue,
-                              height: 10,
-                              width: 10,
-                            ),
-                            pw.Expanded(
-                              child: pw.Text(
-                                "  Point de départ (D)",
-                                style: pw.TextStyle(
-                                  fontWeight: pw.FontWeight.bold,
-                                ),
-                                softWrap: true,
-                              ),
-                            ),
-                          ],
-                        ),
-                        pw.Row(
-                          crossAxisAlignment: pw.CrossAxisAlignment.center,
-                          children: [
-                            pw.Padding(
-                              padding: pw.EdgeInsets.only(
-                                bottom: 20,
-                              ),
-                            ),
-                            pw.CustomPaint(
-                              size: const PdfPoint(10, 10),
-                              painter: (PdfGraphics canvas, PdfPoint size) {
-                                canvas
-                                  ..moveTo(0, 0)
-                                  ..lineTo(10, 0)
-                                  ..setColor(PdfColors.blue)
-                                  ..strokePath();
-                              },
-                            ),
-                            pw.Expanded(
-                              child: pw.Text(
-                                "  Chemin a suivre",
-                                style: pw.TextStyle(
-                                  fontWeight: pw.FontWeight.bold,
-                                ),
-                                softWrap: true,
-                              ),
-                            ),
-                          ],
-                        ),
-                        pw.CustomPaint(
-                          size: const PdfPoint(10, 10),
-                          painter: (PdfGraphics canvas, PdfPoint size) {
-                            canvas
-                              ..moveTo(0, 0)
-                              ..lineTo(350, 0)
-                              ..setColor(PdfColors.grey200)
-                              ..strokePath();
-                          },
-                        ),
-                        pw.SizedBox(
-                          height: 20,
+                          height: 80,
                         ),
                         pw.Align(
                           alignment: pw.Alignment.center,
@@ -429,7 +432,7 @@ class MainStaticLogic extends GetxController {
                           ),
                         ),
                         pw.SizedBox(
-                          height: 20,
+                          height: 100,
                         ),
                         pw.Image(
                           iconImage,
@@ -464,7 +467,8 @@ class MainStaticLogic extends GetxController {
           .create();
       // state.pdf.save().then((value) {
       // print(value);
-      file.writeAsBytes(await document.save()).then((value) {
+      await file.writeAsBytes(await document.save()).then((value) {
+        state.mapLoad(false);
         Get.toNamed(
           RouteConfig.view_plan,
           arguments: {
@@ -476,45 +480,31 @@ class MainStaticLogic extends GetxController {
       print(error.toString());
     });
   }
-// String? get _errorText {
-//   // at any time, we can get the text from _controller.value.text
-//   final text = _controller.value.text;
-//   // Note: you can do your own custom validation here
-//   // Move this logic this outside the widget for more testable code
-//   if (text.isEmpty) {
-//     return 'Can\'t be empty';
-//   }
-//   if (text.length < 4) {
-//     return 'Too short';
-//   }
-//   // return null if the text is valid
-//   return null;
-// }
 
-  String? get nameError {
-    final text = state.nameController.text;
+  String? userNameError(String? value) {
+    final text = value;
 
-    if (text.isEmpty) {
+    if (text!.isEmpty) {
       return "Le champ nom est obligatoire";
     }
 
     return null;
   }
 
-  String? get surnameError {
-    final text = state.surnameController.text;
+  String? userSurnameError(String? value) {
+    final text = value;
 
-    if (text.isEmpty) {
+    if (text!.isEmpty) {
       return "Le champ prenom est obligatoire";
     }
 
     return null;
   }
 
-  String? get titleError {
-    final text = state.titleController.text;
+  String? userTitleError(String? value) {
+    final text = value;
 
-    if (text.isEmpty) {
+    if (text!.isEmpty) {
       return "Le champ titre est obligatoire";
     }
 
@@ -525,10 +515,10 @@ class MainStaticLogic extends GetxController {
     return null;
   }
 
-  String? get phoneError {
-    final text = state.phoneController.text;
+  String? userPhoneError(String? value) {
+    final text = value;
 
-    if (text.isEmpty) {
+    if (text!.isEmpty) {
       return "Le champ numero est obligatoire";
     }
     final RegExp regExp = RegExp("(6|2)(2|3|[5-9])[0-9]{7}");

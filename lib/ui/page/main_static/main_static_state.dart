@@ -20,6 +20,8 @@ class MainStaticState {
   RxInt radiusOrigin = 150.obs;
   RxInt radiusDest = 120.obs;
 
+  RxBool mapLoad = false.obs;
+
   late TextEditingController titleController;
   late TextEditingController nameController;
   late TextEditingController surnameController;

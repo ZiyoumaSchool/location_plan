@@ -1,6 +1,27 @@
 part of main_page;
 
 class MainState {
+  String API_KEY = "AIzaSyDMvPHsbM0l51gW4shfWTHMUD-8Df-2UKU";
+  RxBool mapLoad = false.obs;
+
+  late GoogleMapController? gmMapController;
+
+  late Uint8List? imageBytes;
+
+  // generate point
+  late GoogleMapPolyline googleMapPolyline;
+  // this is list of marker
+  late RxList<static_map.Marker> markers;
+  // var currentMarker = Rx<static_map.Marker>();
+  final Rx<static_map.Marker?> currentMarker = (null as static_map.Marker?).obs;
+// final Rx<YourObject?> yourObject = (null as YourObject?).obs;
+
+  late TextEditingController titleController;
+  late TextEditingController nameController;
+  late TextEditingController surnameController;
+  late TextEditingController phoneController;
+  late TextEditingController describeController;
+
   var isVisible = true.obs;
   var key = GlobalKey();
 
@@ -55,6 +76,9 @@ class MainState {
 
   late PageController controller;
   MainState() {
+    googleMapPolyline = GoogleMapPolyline(apiKey: API_KEY);
+    markers = <static_map.Marker>[].obs;
+
     places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
     mapController = Completer();
     location = locate.Location();
@@ -64,5 +88,11 @@ class MainState {
     currentPageValue = 0.0;
     screenshotController = ScreenshotController();
     pdf = pw.Document();
+
+    titleController = TextEditingController();
+    nameController = TextEditingController();
+    surnameController = TextEditingController();
+    phoneController = TextEditingController();
+    describeController = TextEditingController();
   }
 }

@@ -2,9 +2,11 @@ library main_page;
 
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:flutter/rendering.dart';
+import 'package:google_map_polyline_new/google_map_polyline_new.dart';
 import 'package:localise/router/router.dart';
 import 'package:location/location.dart' as locate;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -20,9 +22,13 @@ import 'package:localise/common/app_dimens.dart';
 import 'package:localise/common/app_image.dart';
 import 'package:localise/common/app_shadows.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:printing/printing.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 
+import 'package:google_static_maps_controller/google_static_maps_controller.dart'
+    as static_map;
+import 'package:google_maps_flutter/google_maps_flutter.dart' as gm;
 import 'package:pdf/widgets.dart' as pw;
 
 part 'main_logic.dart';
@@ -103,6 +109,7 @@ class _MainPageState extends State<MainPage> {
                           ),
                           onMapCreated:
                               (GoogleMapController controllerCurrent) async {
+                            state.gmMapController = controllerCurrent;
                             state.mapController.complete(controllerCurrent);
 
                             final GoogleMapController controller =
@@ -192,53 +199,6 @@ class _MainPageState extends State<MainPage> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              // Align(
-                              //   alignment: Alignment.bottomRight,
-                              //   child: Container(
-                              //     margin: const EdgeInsets.symmetric(
-                              //         horizontal: 20),
-                              //     // height: 500,
-                              //     width: 40,
-                              //     child: Column(
-                              //       children: [
-                              //         IconButton(
-                              //           icon: Icons.add,
-                              //           onpress: logic.incrementZone,
-                              //         ),
-                              //         Container(
-                              //           decoration: BoxDecoration(
-                              //             color: Colors.white,
-                              //             borderRadius:
-                              //                 BorderRadius.circular(10),
-                              //           ),
-                              //           height: state.radius.value != null
-                              //               ? 330
-                              //               : 400,
-                              //           child: SfSlider.vertical(
-                              //             min: state.minZoneValue,
-                              //             max: state.maxZoneValue,
-                              //             value: state.percentZone.value,
-                              //             interval: 20,
-                              //             showTicks: true,
-                              //             // showLabels: true,
-                              //             //  showTooltip: true,
-                              //             minorTicksPerInterval: 1,
-                              //             onChanged: (dynamic value) {
-                              //               print(value);
-                              //               state.percentZone.value = value;
-                              //               print("change values");
-                              //             },
-                              //           ),
-                              //         ),
-                              //         IconButton(
-                              //           icon: Icons.remove,
-                              //           onpress: logic.decrementZone,
-                              //         ),
-                              //       ],
-                              //     ),
-                              //   ),
-                              // ),
-
                               Container(
                                 height: state.radius.value == null ? 90 : 140,
                                 padding: const EdgeInsets.all(10),
@@ -289,6 +249,19 @@ class _MainPageState extends State<MainPage> {
                                             position: state.currentPos.value,
                                           );
 
+                                          state.currentMarker.value =
+                                              static_map.Marker.custom(
+                                            anchor:
+                                                static_map.MarkerAnchor.center,
+                                            icon: "https://goo.gl/1oTJ9Y",
+                                            locations: [
+                                              static_map.Location(
+                                                state.currentPos.value.latitude,
+                                                state
+                                                    .currentPos.value.longitude,
+                                              ),
+                                            ],
+                                          );
                                           state.radius.value = value as double;
                                         },
                                       ),
@@ -302,23 +275,32 @@ class _MainPageState extends State<MainPage> {
                                                   primary: AppColor.primary,
                                                 ),
                                                 onPressed: () async {
-                                                  Get.toNamed(
-                                                    RouteConfig.main_static,
-                                                    arguments: {
-                                                      "origin": state
-                                                          .currentPos.value,
-                                                      "zoom":
-                                                          state.radius.value ??
-                                                              state.minValue,
-                                                    },
-                                                  );
-                                                  //   Get.toNamed(
-                                                  //     RouteConfig.view_plan,
-                                                  //     arguments: {
-                                                  //       "file": file.path,
-                                                  //     },
-                                                  //   );
-                                                  // });
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (context) {
+                                                        return AlertDialog(
+                                                          scrollable: true,
+                                                          // resizeToAvoidBottomInset: true,
+                                                          title: Text(
+                                                              'Information'), // To display the title it is optional
+                                                          content:
+                                                              getContent(), // Message which will be pop up on the screen
+                                                          // Action widget which will provide the user to acknowledge the choice
+                                                          actions: [
+                                                            cancelBtn(),
+                                                            confirmBtn(),
+                                                          ],
+                                                        );
+                                                      });
+                                                  // Get.defaultDialog(
+                                                  //   title: "Informations",
+                                                  //   middleText: "",
+                                                  //   content: getContent(),
+                                                  //   barrierDismissible: false,
+                                                  //   radius: 10.0,
+                                                  //   confirm: confirmBtn(),
+                                                  //   cancel: cancelBtn(),
+                                                  // );
                                                 },
                                                 child: const Text("continuer"),
                                               )
@@ -337,27 +319,138 @@ class _MainPageState extends State<MainPage> {
                 );
         }),
       ),
-    )
-        // // Obx(() {
-        //   return state.isLoadCurrentPosition.value
-        //       ? Center(child: CircularProgressIndicator())
-        //       : GoogleMap(
-        //           mapType: MapType.normal,
-        //           initialCameraPosition: CameraPosition(
-        //             target: LatLng(
-        //               3.850761,
-        //               11.495295,
-        //               // state.currentPosition.latitude!,
-        //               // state.currentPosition.longitude!,
-        //             ),
-        //             zoom: 16,
-        //           ),
-        //           onMapCreated: (GoogleMapController controller) {
-        //             state.mapController.complete(controller);
-        //           },
-        //         );
-        // }),
+    ));
+  }
+
+  Widget buildName() {
+    return ValueListenableBuilder(
+      // Note: pass _controller to the animation argument
+      valueListenable: state.nameController,
+      builder: (context, TextEditingValue value, __) {
+        // this entire widget tree will rebuild every time
+        // the controller value changes
+        return TextFormField(
+          controller: state.nameController,
+          // autovalidateMode: AutovalidateMode.onUserInteraction,
+          // validator: logic.userNameError,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(),
+            hintText: 'Entrez votre nom',
+            contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          ),
         );
+      },
+    );
+  }
+
+  Widget buildPhone() {
+    return ValueListenableBuilder(
+      // Note: pass _controller to the animation argument
+      valueListenable: state.phoneController,
+      builder: (context, TextEditingValue value, __) {
+        // this entire widget tree will rebuild every time
+        // the controller value changes
+        return TextFormField(
+          controller: state.phoneController,
+          // validator: logic.userPhoneError,
+          // autovalidateMode: AutovalidateMode.onUserInteraction,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(),
+            hintText: 'Entrez le numero de telephone',
+            contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget buildSurname() {
+    return ValueListenableBuilder(
+      // Note: pass _controller to the animation argument
+      valueListenable: state.surnameController,
+      builder: (context, TextEditingValue value, __) {
+        // this entire widget tree will rebuild every time
+        // the controller value changes
+        return TextFormField(
+          controller: state.surnameController,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          // validator: logic.userSurnameError,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(),
+            hintText: 'Entrez votre prenom',
+
+            // errorText: logic.userSurnameError,
+            contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget confirmBtn() {
+    return Obx(() {
+      return ElevatedButton(
+          onPressed: () async {
+            // if (!state.mapLoad.value) {
+            //   if (logic.userPhoneError(state.phoneController.text) == null &&
+            //       logic.userNameError(state.nameController.text) == null &&
+            //       logic.userSurnameError(state.surnameController.text) ==
+            //           null &&
+            //       logic.userTitleError(state.titleController.text) == null) {
+            //     await logic.printMap();
+            //   }
+            //   Get.back();
+
+            // }
+            await logic.printMap();
+            Get.back();
+          },
+          child: state.mapLoad.value
+              ? Padding(
+                  padding: EdgeInsets.all(5),
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                  ),
+                )
+              : Text("Imprimer"));
+    });
+  }
+
+  Widget getContent() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        buildName(),
+        SizedBox(
+          height: 10,
+        ),
+        buildSurname(),
+        SizedBox(
+          height: 10,
+        ),
+        buildPhone(),
+        SizedBox(
+          height: 10,
+        ),
+        TextFormField(
+          controller: state.describeController,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(),
+            hintText: 'Entrez une description de la carte',
+          ),
+          maxLines: 5,
+        ),
+      ],
+    );
+  }
+
+  Widget cancelBtn() {
+    return ElevatedButton(
+        onPressed: () {
+          Get.back();
+        },
+        child: Text("Annuler"));
   }
 
   Future<void> displayPrediction(Prediction? p, BuildContext context) async {

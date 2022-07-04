@@ -236,8 +236,9 @@ class _MainStaticPageState extends State<MainStaticPage> {
             SizedBox(
               height: 10,
             ),
-            TextField(
+            TextFormField(
               controller: state.describeController,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: 'Entrez une description de la carte',
@@ -257,12 +258,13 @@ class _MainStaticPageState extends State<MainStaticPage> {
       builder: (context, TextEditingValue value, __) {
         // this entire widget tree will rebuild every time
         // the controller value changes
-        return TextField(
+        return TextFormField(
           controller: state.nameController,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          validator: logic.userNameError,
           decoration: InputDecoration(
             border: OutlineInputBorder(),
             hintText: 'Entrez votre nom',
-            errorText: logic.nameError,
             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           ),
         );
@@ -277,12 +279,13 @@ class _MainStaticPageState extends State<MainStaticPage> {
       builder: (context, TextEditingValue value, __) {
         // this entire widget tree will rebuild every time
         // the controller value changes
-        return TextField(
+        return TextFormField(
           controller: state.titleController,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          validator: logic.userTitleError,
           decoration: InputDecoration(
             border: OutlineInputBorder(),
             hintText: 'Entrez le titre de la map. Ex: Plan de localsation',
-            errorText: logic.titleError,
             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           ),
         );
@@ -297,12 +300,13 @@ class _MainStaticPageState extends State<MainStaticPage> {
       builder: (context, TextEditingValue value, __) {
         // this entire widget tree will rebuild every time
         // the controller value changes
-        return TextField(
+        return TextFormField(
           controller: state.phoneController,
+          validator: logic.userPhoneError,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           decoration: InputDecoration(
             border: OutlineInputBorder(),
             hintText: 'Entrez le numero de telephone',
-            errorText: logic.phoneError,
             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           ),
         );
@@ -317,12 +321,15 @@ class _MainStaticPageState extends State<MainStaticPage> {
       builder: (context, TextEditingValue value, __) {
         // this entire widget tree will rebuild every time
         // the controller value changes
-        return TextField(
+        return TextFormField(
           controller: state.surnameController,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          validator: logic.userSurnameError,
           decoration: InputDecoration(
             border: OutlineInputBorder(),
             hintText: 'Entrez votre prenom',
-            errorText: logic.surnameError,
+
+            // errorText: logic.userSurnameError,
             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           ),
         );
@@ -331,17 +338,29 @@ class _MainStaticPageState extends State<MainStaticPage> {
   }
 
   Widget confirmBtn() {
-    return ElevatedButton(
-        onPressed: () async {
-          if (logic.phoneError == null &&
-              logic.nameError == null &&
-              logic.surnameError == null &&
-              logic.titleError == null) {
-            await logic.printMap();
-          }
-          Get.back();
-        },
-        child: Text("Imprimer"));
+    return Obx(() {
+      return ElevatedButton(
+          onPressed: () async {
+            if (!state.mapLoad.value) {
+              if (logic.userPhoneError(state.phoneController.text) == null &&
+                  logic.userNameError(state.nameController.text) == null &&
+                  logic.userSurnameError(state.surnameController.text) ==
+                      null &&
+                  logic.userTitleError(state.titleController.text) == null) {
+                await logic.printMap();
+              }
+              Get.back();
+            }
+          },
+          child: state.mapLoad.value
+              ? Padding(
+                  padding: EdgeInsets.all(5),
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                  ),
+                )
+              : Text("Imprimer"));
+    });
   }
 
   Widget cancelBtn() {

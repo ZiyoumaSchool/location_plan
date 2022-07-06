@@ -3,6 +3,7 @@ library onboarding;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:localise/common/app_dimens.dart';
 import 'package:localise/common/app_image.dart';
 import 'package:localise/router/router.dart';
@@ -19,8 +20,10 @@ class OnboarddingPage extends StatelessWidget {
 
   final logic = Get.put(OnboardingLogic());
   final state = Get.find<OnboardingLogic>().state;
+  final box = GetStorage();
   @override
   Widget build(BuildContext context) {
+    box.write('isFirst', true);
     return Scaffold(
       body: SizedBox(
         height: MediaQuery.of(context).size.height,

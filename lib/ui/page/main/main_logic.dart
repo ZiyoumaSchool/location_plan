@@ -11,6 +11,13 @@ class MainLogic extends GetxController {
     //     .initialize(apiKey: "AIzaSyDMvPHsbM0l51gW4shfWTHMUD-8Df-2UKU");
   }
 
+  void addLocation(LocationMap location) {
+    final locationsBox = Hive.box(state.dbName.value);
+    locationsBox.add(location);
+    // ignore: avoid_print
+    print('add location : ${location.name} ${location.surname}');
+  }
+
   getCurrentPosition() {
     state.isLoadCurrentPosition.value = true;
     state.location.getLocation().then((value) {
@@ -104,35 +111,6 @@ class MainLogic extends GetxController {
                           mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: pw.CrossAxisAlignment.end,
                           children: [
-                          // pw.Column(
-                          //     mainAxisAlignment: pw.MainAxisAlignment.end,
-                          //     children: [
-                          // pw.Text(
-                          //   "Scannez le code pour voir sur google map",
-                          //   style: pw.TextStyle(
-                          //     fontSize: 12,
-                          //     // fontWeight: pw.FontWeight.bold,
-                          //   ),
-                          // ),
-                          // pw.Align(
-                          //   alignment: pw.Alignment.center,
-                          //   child: pw.BarcodeWidget(
-                          //     data:
-                          //         "http://maps.google.com/maps?q=${state.currentPos.value.latitude},${state.currentPos.value.longitude}",
-                          //     barcode: pw.Barcode.qrCode(),
-                          //     width: 200,
-                          //     height: 100,
-                          //   ),
-                          // ),
-                          // pw.SizedBox(
-                          //   height: 50,
-                          // ),
-                          //   pw.Image(
-                          //     iconImage,
-                          //     width: 60,
-                          //   ),
-                          // ]),
-
                           pw.Image(
                             iconImage,
                             width: 60,
@@ -149,7 +127,6 @@ class MainLogic extends GetxController {
                               height: 100,
                             ),
                           ]),
-
                           pw.Column(
                               mainAxisAlignment: pw.MainAxisAlignment.end,
                               children: [
@@ -165,7 +142,7 @@ class MainLogic extends GetxController {
                                 ),
                                 pw.Text(
                                   "voir sur google map",
-                                  style: pw.TextStyle(
+                                  style: const pw.TextStyle(
                                     fontSize: 13,
                                   ),
                                 ),
@@ -297,7 +274,19 @@ class MainLogic extends GetxController {
       // print(value);
       await file.writeAsBytes(await document.save()).then((value) {
         state.mapLoad(false);
-        Get.toNamed(
+        LocationMap locationMap = LocationMap(
+          name: state.nameController.text,
+          surname: state.surnameController.text,
+          phone: state.phoneController.text,
+          describe: state.describeController.text,
+          path: file.path,
+          lat: state.currentPos.value.latitude,
+          lng: state.currentPos.value.longitude,
+        );
+
+        addLocation(locationMap);
+
+        Get.offNamed(
           RouteConfig.view_plan,
           arguments: {
             "file": file.path,

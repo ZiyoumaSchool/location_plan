@@ -1,30 +1,21 @@
 library main_static;
 
 import 'dart:io';
-import 'dart:math';
-import 'dart:typed_data';
 
-import 'package:custom_marker/marker_icon.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:get/get.dart';
 import 'package:google_map_polyline_new/google_map_polyline_new.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gm;
-import 'package:google_maps_routes/google_maps_routes.dart';
-import 'package:localise/common/app_color.dart';
 import 'package:localise/common/app_shadows.dart';
 import 'package:localise/router/router.dart';
 import 'package:path_provider/path_provider.dart';
 
-import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 
-import 'package:http/http.dart' as http;
 
 import 'package:google_api_headers/google_api_headers.dart';
-import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_maps_webservice/places.dart';
 
 import 'package:google_static_maps_controller/google_static_maps_controller.dart'
@@ -35,7 +26,7 @@ part 'main_static_logic.dart';
 part 'main_static_state.dart';
 
 class MainStaticPage extends StatefulWidget {
-  MainStaticPage({Key? key}) : super(key: key);
+  const MainStaticPage({Key? key}) : super(key: key);
 
   @override
   State<MainStaticPage> createState() => _MainStaticPageState();
@@ -71,7 +62,7 @@ class _MainStaticPageState extends State<MainStaticPage> {
               // await logic.printMap();
               // await printMap();
             },
-            icon: Icon(Icons.print),
+            icon: const Icon(Icons.print),
           ),
         ],
       ),
@@ -221,25 +212,25 @@ class _MainStaticPageState extends State<MainStaticPage> {
           mainAxisSize: MainAxisSize.min,
           children: [
             buildTitle(),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             buildName(),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             buildSurname(),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             buildPhone(),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             TextFormField(
               controller: state.describeController,
               autovalidateMode: AutovalidateMode.onUserInteraction,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: 'Entrez une description de la carte',
               ),
@@ -262,7 +253,7 @@ class _MainStaticPageState extends State<MainStaticPage> {
           controller: state.nameController,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           validator: logic.userNameError,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             border: OutlineInputBorder(),
             hintText: 'Entrez votre nom',
             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -283,7 +274,7 @@ class _MainStaticPageState extends State<MainStaticPage> {
           controller: state.titleController,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           validator: logic.userTitleError,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             border: OutlineInputBorder(),
             hintText: 'Entrez le titre de la map. Ex: Plan de localsation',
             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -304,7 +295,7 @@ class _MainStaticPageState extends State<MainStaticPage> {
           controller: state.phoneController,
           validator: logic.userPhoneError,
           autovalidateMode: AutovalidateMode.onUserInteraction,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             border: OutlineInputBorder(),
             hintText: 'Entrez le numero de telephone',
             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -325,7 +316,7 @@ class _MainStaticPageState extends State<MainStaticPage> {
           controller: state.surnameController,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           validator: logic.userSurnameError,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             border: OutlineInputBorder(),
             hintText: 'Entrez votre prenom',
 
@@ -353,13 +344,13 @@ class _MainStaticPageState extends State<MainStaticPage> {
             }
           },
           child: state.mapLoad.value
-              ? Padding(
+              ? const Padding(
                   padding: EdgeInsets.all(5),
                   child: CircularProgressIndicator(
                     color: Colors.white,
                   ),
                 )
-              : Text("Imprimer"));
+              : const Text("Imprimer"));
     });
   }
 
@@ -368,7 +359,7 @@ class _MainStaticPageState extends State<MainStaticPage> {
         onPressed: () {
           Get.back();
         },
-        child: Text("Annuler"));
+        child: const Text("Annuler"));
   }
 
   Future<void> displayPrediction(Prediction? p, BuildContext context) async {
@@ -442,7 +433,7 @@ class CardCity extends StatelessWidget {
         boxShadow: AppShadow.boxShadow,
       ),
       child: Container(
-        padding: EdgeInsets.symmetric(
+        padding: const EdgeInsets.symmetric(
           vertical: 2,
           horizontal: 5,
         ),
@@ -453,14 +444,14 @@ class CardCity extends StatelessWidget {
           children: [
             Text(
               place.name,
-              style: TextStyle(color: Colors.green),
+              style: const TextStyle(color: Colors.green),
             ),
-            SizedBox(
+            const SizedBox(
               width: 5,
             ),
             GestureDetector(
               onTap: press,
-              child: Icon(
+              child: const Icon(
                 Icons.close,
                 color: Colors.green,
                 size: 13,

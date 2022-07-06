@@ -13,8 +13,9 @@ class MainState {
   // this is list of marker
   late RxList<static_map.Marker> markers;
   // var currentMarker = Rx<static_map.Marker>();
-  final Rx<static_map.Marker?> currentMarker = (null as static_map.Marker?).obs;
+  late Rx<static_map.Marker?> currentMarker;
 // final Rx<YourObject?> yourObject = (null as YourObject?).obs;
+  final RxString dbName = 'location'.obs;
 
   late TextEditingController titleController;
   late TextEditingController nameController;
@@ -76,6 +77,8 @@ class MainState {
 
   late PageController controller;
   MainState() {
+    currentMarker = Rx(null);
+
     googleMapPolyline = GoogleMapPolyline(apiKey: API_KEY);
     markers = <static_map.Marker>[].obs;
 

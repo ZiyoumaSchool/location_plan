@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:localise/ui/page/histry/histry_view.dart';
 import 'package:localise/ui/page/main/main_view.dart';
 import 'package:localise/ui/page/main_static/main_static_view.dart';
 import 'package:localise/ui/page/onboarding/onboard_view.dart';
@@ -11,6 +12,7 @@ class RouteConfig {
   static const String main = "/main";
   static const String view_plan = "/view_plan";
   static const String main_static = "/main_static";
+  static const String histoy = "/histoy";
 
   ///Alias ​​mapping page
   static final List<GetPage> getPages = [
@@ -28,7 +30,11 @@ class RouteConfig {
     ),
     GetPage(
       name: main_static,
-      page: () => MainStaticPage(),
+      page: () => const MainStaticPage(),
+    ),
+    GetPage(
+      name: histoy,
+      page: () => const HistryPage(),
     ),
   ];
 }

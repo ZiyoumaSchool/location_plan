@@ -3,12 +3,20 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:localise/common/app_dimens.dart';
 import 'package:localise/common/app_image.dart';
 import 'package:localise/common/app_text_style.dart';
 import 'package:localise/router/router.dart';
+import 'package:localise/ui/models/location.dart';
 
-void main() {
+void main() async {
+  await GetStorage.init();
+  await Hive.initFlutter();
+  Hive.registerAdapter(LocationMapAdapter());
+
+  await Hive.openBox('location');
   runApp(const MyApp());
 }
 
@@ -66,13 +74,20 @@ class SplashhPage extends StatefulWidget {
 class _SplashhPageState extends State<SplashhPage> {
   // var storage = Get.find<GetStorage>();
 
+  final box = GetStorage();
+
   //Wait 3 seconds and redirect user to onboarding page
   @override
   void initState() {
     super.initState();
+
+    var isFirst = box.read('isFirst');
+
     Timer(
       const Duration(seconds: 3),
-      () => Get.offAllNamed(RouteConfig.onboard),
+      () => Get.offAllNamed(isFirst == null || isFirst == false
+          ? RouteConfig.onboard
+          : RouteConfig.histoy),
     );
   }
 

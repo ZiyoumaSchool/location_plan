@@ -147,7 +147,6 @@ class MainStaticLogic extends GetxController {
       state.isLoadingGeneratePoint(false);
       print(error.toString());
     });
-    ;
   }
 
   deletePoint(PlaceDetails destinationDetail) async {
@@ -174,15 +173,15 @@ class MainStaticLogic extends GetxController {
 
     // Remove route
     state.paths.removeWhere((path) {
-      var current_location = path.points.last as static_map.Location;
-      return current_location == destinationDetailLocation;
+      var currentLocation = path.points.last as static_map.Location;
+      return currentLocation == destinationDetailLocation;
     });
 
     // Remove radius
     state.paths.removeWhere((path) {
       try {
-        static_map.CirclePath path_round = path as static_map.CirclePath;
-        return path_round.center == destinationDetailLocation;
+        static_map.CirclePath pathRound = path as static_map.CirclePath;
+        return pathRound.center == destinationDetailLocation;
       } catch (e) {
         return false;
       }

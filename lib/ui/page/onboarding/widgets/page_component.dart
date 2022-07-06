@@ -28,6 +28,7 @@ class PageViewComponent extends StatelessWidget {
           ),
           Lottie.asset(
             animation,
+            height: 250,
           ),
           const SizedBox(
             height: AppDimens.extraPadding,

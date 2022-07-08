@@ -1,5 +1,6 @@
 library histry_page;
 
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -30,6 +31,9 @@ class _HistryPageState extends State<HistryPage> {
   Widget build(BuildContext context) {
     state.searchInputController.addListener(() {
       state.search.value = state.searchInputController.text;
+      setState(() {
+        print("delano");
+      });
     });
     return Scaffold(
       appBar: AppBar(
@@ -109,6 +113,8 @@ class _HistryPageState extends State<HistryPage> {
               String text = state.searchInputController.text;
               String value =
                   location.name! + location.surname! + location.phone!;
+              print(
+                  "================================================================>");
               if (text.isNotEmpty) {
                 if (value.toLowerCase().contains(text.toLowerCase())) {
                   print("Val are solved");
@@ -122,10 +128,17 @@ class _HistryPageState extends State<HistryPage> {
                 child: GestureDetector(
                   onTap: () {
                     print("===========+>  ${location.path}");
-                    Get.toNamed(
-                      RouteConfig.view_plan,
-                      arguments: {
-                        "file": location.path,
+                    FocusScope.of(context).unfocus();
+
+                    Timer(
+                      const Duration(milliseconds: 100),
+                      () {
+                        Get.toNamed(
+                          RouteConfig.view_plan,
+                          arguments: {
+                            "file": location.path,
+                          },
+                        );
                       },
                     );
                   },

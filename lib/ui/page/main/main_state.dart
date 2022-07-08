@@ -32,7 +32,7 @@ class MainState {
   File? image;
 
   late TextEditingController searchController;
-  late ScreenshotController screenshotController;
+  // late ScreenshotController screenshotController;
 
   late pw.Document pdf;
 
@@ -89,7 +89,7 @@ class MainState {
     searchController = TextEditingController();
     pageController = PageController();
     currentPageValue = 0.0;
-    screenshotController = ScreenshotController();
+    // screenshotController = ScreenshotController();
     pdf = pw.Document();
 
     titleController = TextEditingController();

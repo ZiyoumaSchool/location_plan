@@ -23,7 +23,7 @@ import 'package:localise/common/app_image.dart';
 import 'package:localise/common/app_shadows.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:printing/printing.dart';
-import 'package:screenshot/screenshot.dart';
+// import 'package:screenshot/screenshot.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 import 'package:google_static_maps_controller/google_static_maps_controller.dart'

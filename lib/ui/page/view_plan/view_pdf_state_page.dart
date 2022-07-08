@@ -27,116 +27,139 @@ class _ViewPDFgPageState extends State<ViewPDFgPage> {
 
   final state = Get.find<ViewPDFLogic>().state;
 
+  // @override
+  // void initState() {
+  //   super.initState();
+
+  //   Timer(const Duration(seconds: 5), () {
+  //     print("Sa y est :,,,,,,,,");
+  //     Get.offNamed(
+  //       RouteConfig.view_plan,
+  //       arguments: {
+  //         "file": state.file!.path,
+  //       },
+  //     );
+  //   });
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
-        child: Stack(
-          children: [
-            // SfPdfVie
-            // SfPdfViewer.asset(Get.arguments["file"] as String),
-            //   Obx(() {
-            //     return Container(
-            //       child: state.isLoading.value
-            //           ? Center(child: CircularProgressIndicator())
-            //           : PDFViewer(
-            //               document: state.doc!,
-            //               zoomSteps: 1,
-            //             ),
-            //     );
-            //   }),
-            PDFView(
-              filePath: Get.arguments["file"] as String,
-              enableSwipe: true,
-              swipeHorizontal: true,
-              autoSpacing: false,
-              pageFling: false,
-              onRender: (_pages) {
-                // setState(() {
-                //   pages = _pages;
-                //   isReady = true;
-                // });
-              },
-              onError: (error) {
-                print(error.toString());
-              },
-              onPageError: (page, error) {
-                print('$page: ${error.toString()}');
-              },
-              // onViewCreated: (pdfViewController) {
-              //   _controller.complete(pdfViewController);
-              // },
-              onPageChanged: (page, total) {
-                print('page change: $page/$total');
-              },
-            ),
+        child: state.isLoading.value
+            ? Center(child: CircularProgressIndicator())
+            : Stack(
+                children: [
+                  // SfPdfVie
+                  // SfPdfViewer.asset(Get.arguments["file"] as String),
+                  //   Obx(() {
+                  //     return Container(
+                  // child: state.isLoading.value
+                  //     ? Center(child: CircularProgressIndicator())
+                  //           : PDFViewer(
+                  //               document: state.doc!,
+                  //               zoomSteps: 1,
+                  //             ),
+                  //     );
+                  //   }),
+                  PDFView(
+                    filePath: state.file!.path,
+                    enableSwipe: true,
+                    swipeHorizontal: true,
+                    autoSpacing: false,
+                    pageFling: false,
+                    defaultPage: 0,
+                    onRender: (_pages) {
+                      // setState(() {
+                      // print("Beloa lafnldnsds");
+                      // pages = _pages;
+                      // isReady = true;
+                      // });
+                    },
+                    onError: (error) {
+                      print(
+                          " ==========================> Delano :::::::::::::::: ${error.toString()}");
+                    },
+                    onPageError: (page, error) {
+                      print(
+                          '==========================> Delano :::::::::::::::: $page: ${error.toString()}');
+                    },
+                    // onViewCreated: (pdfViewController) {
+                    //   _controller.complete(pdfViewController);
+                    // },
+                    onPageChanged: (page, total) {
+                      print('page change: $page/$total');
+                    },
+                  ),
 
-            Positioned(
-              bottom: 20,
-              right: 10,
-              child: GestureDetector(
-                onTap: () {
-                  Get.offAllNamed(RouteConfig.histoy);
-                },
-                child: Container(
-                  height: 40,
-                  width: 40,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    // color: AppColor.primary,
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                        offset: Offset(0, 3), // changes position of shadow
+                  Positioned(
+                    bottom: 20,
+                    right: 10,
+                    child: GestureDetector(
+                      onTap: () {
+                        Get.offAllNamed(RouteConfig.histoy);
+                      },
+                      child: Container(
+                        height: 40,
+                        width: 40,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          // color: AppColor.primary,
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset:
+                                  Offset(0, 3), // changes position of shadow
+                            ),
+                          ],
+                        ),
+                        child: Icon(
+                          Icons.close,
+                          color: AppColor.primary,
+                        ),
                       ),
-                    ],
+                    ),
                   ),
-                  child: Icon(
-                    Icons.close,
-                    color: AppColor.primary,
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: 20,
-              left: 10,
-              // bottom: MediaQuery.of(context).size.height / 2,
-              child: GestureDetector(
-                onTap: () async {
-                  await shareFile(Get.arguments["file"] as String);
-                },
-                child: Container(
-                  height: 50,
-                  width: 50,
-                  padding: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                        offset: Offset(0, 3), // changes position of shadow
+                  Positioned(
+                    bottom: 20,
+                    left: 10,
+                    // bottom: MediaQuery.of(context).size.height / 2,
+                    child: GestureDetector(
+                      onTap: () async {
+                        await shareFile(Get.arguments["file"] as String);
+                      },
+                      child: Container(
+                        height: 50,
+                        width: 50,
+                        padding: EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset:
+                                  Offset(0, 3), // changes position of shadow
+                            ),
+                          ],
+                        ),
+                        child: Icon(
+                          Icons.share,
+                          color: Colors.green,
+                          size: 30,
+                        ),
                       ),
-                    ],
+                    ),
                   ),
-                  child: Icon(
-                    Icons.share,
-                    color: Colors.green,
-                    size: 30,
-                  ),
-                ),
+                ],
               ),
-            ),
-          ],
-        ),
       ),
     );
   }

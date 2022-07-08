@@ -7,7 +7,8 @@ class ViewPDFLogic extends GetxController {
     state.isLoading(true);
 
 // Load from file
-    File file = File(Get.arguments["file"] as String);
+    state.file = File(Get.arguments["file"] as String);
+    state.isLoading(false);
 // PDFDocument doc = await PDFDocument.fromFile(file);
     // PDFDocument.fromFile(file).then((value) {
     //   state.doc = value;

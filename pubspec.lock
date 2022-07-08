@@ -230,13 +230,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.3.0"
-  flutter_datetime_picker:
-    dependency: "direct main"
-    description:
-      name: flutter_datetime_picker
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.5.1"
   flutter_google_places:
     dependency: "direct main"
     description:
@@ -730,13 +723,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.26.0"
-  screenshot:
-    dependency: "direct main"
-    description:
-      name: screenshot
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.2.3"
   share_plus:
     dependency: "direct main"
     description:
@@ -798,13 +784,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
-  sliding_up_panel:
-    dependency: "direct main"
-    description:
-      name: sliding_up_panel
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0+1"
   source_gen:
     dependency: transitive
     description:

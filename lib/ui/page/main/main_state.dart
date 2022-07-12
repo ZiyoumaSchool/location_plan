@@ -4,6 +4,8 @@ class MainState {
   String API_KEY = "AIzaSyDMvPHsbM0l51gW4shfWTHMUD-8Df-2UKU";
   RxBool mapLoad = false.obs;
 
+  final box = GetStorage();
+
   late GoogleMapController? gmMapController;
 
   late Uint8List? imageBytes;
@@ -73,10 +75,14 @@ class MainState {
   RxBool isLoadCurrentPosition = RxBool(false);
   RxBool hasAutoCompleteResult = RxBool(false);
   RxBool isLoadSearch = RxBool(false);
+
+  RxBool isFirstParam = false.obs;
   // late Completer<GoogleMapController> mapController;
 
   late PageController controller;
   MainState() {
+    isFirstParam.value = box.read('isFirstParam') ?? true;
+
     currentMarker = Rx(null);
 
     googleMapPolyline = GoogleMapPolyline(apiKey: API_KEY);

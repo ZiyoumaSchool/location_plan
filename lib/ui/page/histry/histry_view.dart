@@ -5,12 +5,14 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:localise/common/app_color.dart';
 import 'package:localise/common/app_image.dart';
 import 'package:localise/router/router.dart';
 import 'package:localise/ui/models/location.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 part 'histry_logic.dart';
 part 'histry_state.dart';
@@ -27,8 +29,118 @@ class _HistryPageState extends State<HistryPage> {
 
   final state = Get.find<HistryLogic>().state;
 
+  late TutorialCoachMark tutorialCoachMark;
+  List<TargetFocus> targets = <TargetFocus>[];
+  GlobalKey key_add = GlobalKey();
+  GlobalKey key_search_button = GlobalKey();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    initTarget();
+    super.initState();
+  }
+
+  void initTarget() {
+    targets.add(
+      TargetFocus(
+        identify: "Target 4",
+        keyTarget: key_search_button,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            child: Container(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "Chercher un plan ",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 20.0),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: Text(
+                      "Chercher un plan de localisation a partir de sa description, le nom, le prenom, le numero de telephone,...",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ],
+        shape: ShapeLightFocus.RRect,
+      ),
+    );
+
+    targets.add(TargetFocus(
+      identify: "Target 1",
+      keyTarget: key_add,
+      contents: [
+        TargetContent(
+          align: ContentAlign.top,
+          child: Container(
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0),
+                  child: Text(
+                    "Ajouter",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0),
+                  ),
+                ),
+                Text(
+                  "Cliquez pour créer un nouveau plan de localisation.",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+      radius: 10,
+      shape: ShapeLightFocus.Circle,
+    ));
+  }
+
+  void showTutorial() {
+    tutorialCoachMark = TutorialCoachMark(
+      context,
+      targets: targets,
+      colorShadow: AppColor.primary,
+      textSkip: "",
+      paddingFocus: 10,
+      opacityShadow: 0.8,
+      onFinish: () {
+        print("finish");
+
+        state.storage.write("isFirstListPlan", false);
+        state.isFirstListPlan.value = false;
+      },
+      onClickTarget: (target) {
+        print('onClickTarget: $target');
+      },
+      onSkip: () {
+        print("skip");
+      },
+      onClickOverlay: (target) {
+        print('onClickOverlay: $target');
+      },
+    )..show();
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (state.isFirstListPlan.value) {
+      showTutorial();
+    }
     state.searchInputController.addListener(() {
       state.search.value = state.searchInputController.text;
       setState(() {
@@ -62,6 +174,7 @@ class _HistryPageState extends State<HistryPage> {
                   borderRadius: BorderRadius.circular(32),
                 ),
                 child: TextFormField(
+                  key: key_search_button,
                   controller: state.searchInputController,
                   decoration: const InputDecoration(
                     focusedBorder: InputBorder.none,
@@ -89,6 +202,7 @@ class _HistryPageState extends State<HistryPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        key: key_add,
         backgroundColor: AppColor.primary,
         onPressed: () {
           Get.toNamed(RouteConfig.main);

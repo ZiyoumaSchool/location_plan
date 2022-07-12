@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:get_storage/get_storage.dart';
 import 'package:google_map_polyline_new/google_map_polyline_new.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:localise/router/router.dart';
@@ -29,6 +30,7 @@ import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'package:google_static_maps_controller/google_static_maps_controller.dart'
     as static_map;
 import 'package:pdf/widgets.dart' as pw;
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 part 'main_logic.dart';
 part 'main_state.dart';
@@ -45,6 +47,111 @@ class _MainPageState extends State<MainPage> {
 
   final state = Get.find<MainLogic>().state;
 
+  late TutorialCoachMark tutorialCoachMark;
+  List<TargetFocus> targets = <TargetFocus>[];
+  GlobalKey key_slide = GlobalKey();
+  GlobalKey key_search_button = GlobalKey();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    initTarget();
+    super.initState();
+  }
+
+  void initTarget() {
+    targets.add(
+      TargetFocus(
+        identify: "Target 0",
+        keyTarget: key_search_button,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            child: Container(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "Chercher une zone ",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 20.0),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: Text(
+                      "Cliquez sur ce bouton rechercher une zone apartir de la quel le pla va etres generer.",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    targets.add(TargetFocus(
+      identify: "Target 1",
+      keyTarget: key_slide,
+      contents: [
+        TargetContent(
+          align: ContentAlign.top,
+          child: Container(
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0),
+                  child: Text(
+                    "Definir le rayon",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0),
+                  ),
+                ),
+                Text(
+                  "Definir la surface a prendre sur la map. Celle ci vous permet de definir les zone visible sur la carte.",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+      shape: ShapeLightFocus.RRect,
+    ));
+  }
+
+  void showTutorial() {
+    tutorialCoachMark = TutorialCoachMark(
+      context,
+      targets: targets,
+      colorShadow: AppColor.primary,
+      textSkip: "Sauter",
+      paddingFocus: 10,
+      opacityShadow: 0.8,
+      onFinish: () {
+        print("finish");
+
+        state.box.write("isFirstParam", false);
+        state.isFirstParam.value = false;
+      },
+      onClickTarget: (target) {
+        print('onClickTarget: $target');
+      },
+      onSkip: () {
+        print("skip");
+      },
+      onClickOverlay: (target) {
+        print('onClickOverlay: $target');
+      },
+    )..show();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,6 +160,10 @@ class _MainPageState extends State<MainPage> {
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           child: Obx(() {
+            if (state.isLoadCurrentPosition.value && state.isFirstParam.value) {
+              showTutorial();
+            }
+
             return !state.isLoadCurrentPosition.value
                 ? Stack(
                     children: [
@@ -89,101 +200,92 @@ class _MainPageState extends State<MainPage> {
                         if (state.isVisible.value) {
                           print("say hello");
                         }
-                        return RepaintBoundary(
-                          key: state.key,
-                          child:
-                              // Container(
-                              //   color: Colors.red,
-                              //   height: 100,
-                              //   width: 100,
-                              // )
-                              GoogleMap(
-                            markers: <Marker>{state.position.value},
-                            zoomControlsEnabled: false,
-                            zoomGesturesEnabled: true,
-                            mapType: MapType.normal,
-                            initialCameraPosition: CameraPosition(
-                              target: state.currentPos.value,
-                              // zoom: state.radius.value ?? state.minValue,
-                            ),
-                            onMapCreated:
-                                (GoogleMapController controllerCurrent) async {
-                              state.gmMapController = controllerCurrent;
-                              state.mapController.complete(controllerCurrent);
-
-                              final GoogleMapController controller =
-                                  await state.mapController.future;
-
-                              controller.animateCamera(
-                                CameraUpdate.newCameraPosition(
-                                  CameraPosition(
-                                    target: state.currentPos.value,
-                                    zoom: 15,
-                                  ),
-                                ),
-                              );
-
-                              state.currentMarker.value =
-                                  static_map.Marker.custom(
-                                anchor: static_map.MarkerAnchor.center,
-                                icon: "https://goo.gl/1oTJ9Y",
-                                locations: [
-                                  static_map.Location(
-                                    state.currentPos.value.latitude,
-                                    state.currentPos.value.longitude,
-                                  ),
-                                ],
-                              );
-
-                              state.position.value = Marker(
-                                markerId: const MarkerId("current_position"),
-                                infoWindow: const InfoWindow(
-                                  title: 'Zone selectioner',
-                                  snippet:
-                                      "Le plan va etre generer a partir de ce point",
-                                ),
-                                position: state.currentPos.value,
-                              );
-                            },
-                            onTap: (position) async {
-                              state.currentPos.value = position;
-                              print(position.toString());
-
-                              final GoogleMapController controller =
-                                  await state.mapController.future;
-
-                              controller.animateCamera(
-                                CameraUpdate.newCameraPosition(
-                                  CameraPosition(
-                                    target: state.currentPos.value,
-                                    zoom: state.radius.value ?? state.minValue,
-                                  ),
-                                ),
-                              );
-
-                              state.currentMarker.value =
-                                  static_map.Marker.custom(
-                                anchor: static_map.MarkerAnchor.center,
-                                icon: "https://goo.gl/1oTJ9Y",
-                                locations: [
-                                  static_map.Location(
-                                    state.currentPos.value.latitude,
-                                    state.currentPos.value.longitude,
-                                  ),
-                                ],
-                              );
-
-                              state.position.value = Marker(
-                                markerId: const MarkerId("current_position"),
-                                infoWindow: const InfoWindow(
-                                  title: 'Zone selectioner',
-                                  snippet:
-                                      "Le plan va etre generer a partir de ce point",
-                                ),
-                                position: state.currentPos.value,
-                              );
-                            },
+                        return GoogleMap(
+                          markers: <Marker>{state.position.value},
+                          zoomControlsEnabled: false,
+                          zoomGesturesEnabled: true,
+                          mapType: MapType.normal,
+                          initialCameraPosition: CameraPosition(
+                            target: state.currentPos.value,
+                            // zoom: state.radius.value ?? state.minValue,
                           ),
+                          onMapCreated:
+                              (GoogleMapController controllerCurrent) async {
+                            state.gmMapController = controllerCurrent;
+                            state.mapController.complete(controllerCurrent);
+
+                            final GoogleMapController controller =
+                                await state.mapController.future;
+
+                            controller.animateCamera(
+                              CameraUpdate.newCameraPosition(
+                                CameraPosition(
+                                  target: state.currentPos.value,
+                                  zoom: 15,
+                                ),
+                              ),
+                            );
+
+                            state.currentMarker.value =
+                                static_map.Marker.custom(
+                              anchor: static_map.MarkerAnchor.center,
+                              icon: "https://goo.gl/1oTJ9Y0",
+                              locations: [
+                                static_map.Location(
+                                  state.currentPos.value.latitude,
+                                  state.currentPos.value.longitude,
+                                ),
+                              ],
+                            );
+
+                            state.position.value = Marker(
+                              markerId: const MarkerId("current_position"),
+                              infoWindow: const InfoWindow(
+                                title: 'Zone selectioner',
+                                snippet:
+                                    "Le plan va etre generer a partir de ce point",
+                              ),
+                              position: state.currentPos.value,
+                            );
+                          },
+                          onTap: (position) async {
+                            state.currentPos.value = position;
+                            print(position.toString());
+
+                            final GoogleMapController controller =
+                                await state.mapController.future;
+
+                            controller.animateCamera(
+                              CameraUpdate.newCameraPosition(
+                                CameraPosition(
+                                  target: state.currentPos.value,
+                                  zoom: state.radius.value ?? state.minValue,
+                                ),
+                              ),
+                            );
+
+                            state.currentMarker.value =
+                                static_map.Marker.custom(
+                              anchor: static_map.MarkerAnchor.center,
+                              icon: "https://goo.gl/1oTJ9Y0",
+                              locations: [
+                                static_map.Location(
+                                  state.currentPos.value.latitude,
+                                  state.currentPos.value.longitude,
+                                ),
+                              ],
+                            );
+
+                            state.position.value = Marker(
+                              markerId: const MarkerId("current_position"),
+                              infoWindow: const InfoWindow(
+                                title: 'Zone selectioner',
+                                snippet:
+                                    "Le plan va etre generer a partir de ce point",
+                              ),
+                              position: state.currentPos.value,
+                            );
+                          },
                         );
                       }),
                       Obx(() {
@@ -194,8 +296,10 @@ class _MainPageState extends State<MainPage> {
                             child: Align(
                               alignment: Alignment.topRight,
                               child: InkWell(
+                                key: key_search_button,
                                 splashColor: AppColor.primary,
                                 radius: 5,
+
                                 // onTap: _showMyDialog
                                 onTap: _handlePressButton,
                                 child: Container(
@@ -225,6 +329,7 @@ class _MainPageState extends State<MainPage> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 Container(
+                                  key: key_slide,
                                   height: state.radius.value == null ? 90 : 140,
                                   padding: const EdgeInsets.all(10),
                                   margin: const EdgeInsets.all(20),
@@ -280,7 +385,7 @@ class _MainPageState extends State<MainPage> {
                                                 static_map.Marker.custom(
                                               anchor: static_map
                                                   .MarkerAnchor.center,
-                                              icon: "https://goo.gl/1oTJ9Y",
+                                              icon: "https://goo.gl/1oTJ9Y0",
                                               locations: [
                                                 static_map.Location(
                                                   state.currentPos.value

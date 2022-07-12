@@ -41,7 +41,7 @@ class MainStaticLogic extends GetxController {
     state.markers.value.add(
       static_map.Marker.custom(
         anchor: static_map.MarkerAnchor.center,
-        icon: "https://goo.gl/1oTJ9Y",
+        icon: "https://goo.gl/1oTJ9Y0",
         locations: [
           static_map.Location(
             state.originPoint.latitude,

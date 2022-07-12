@@ -6,7 +6,12 @@ class HistryState {
   final RxList locations = [].obs;
   final TextEditingController searchInputController = TextEditingController();
 
+  final storage = GetStorage();
+
   var box = Hive.box('location');
 
-  HistryState();
+  RxBool isFirstListPlan = false.obs;
+  HistryState() {
+    isFirstListPlan.value = storage.read('isFirstListPlan') ?? true;
+  }
 }

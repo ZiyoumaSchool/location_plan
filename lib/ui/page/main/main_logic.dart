@@ -11,6 +11,14 @@ class MainLogic extends GetxController {
     //     .initialize(apiKey: "AIzaSyDMvPHsbM0l51gW4shfWTHMUD-8Df-2UKU");
   }
 
+  @override
+  void onClose() {
+    // TODO: implement onClose
+    state.box.write("isFirstParam", false);
+    state.isFirstParam.value = false;
+    super.onClose();
+  }
+
   void addLocation(LocationMap location) {
     final locationsBox = Hive.box(state.dbName.value);
     locationsBox.add(location);
@@ -27,7 +35,7 @@ class MainLogic extends GetxController {
 
       state.currentMarker.value = static_map.Marker.custom(
         anchor: static_map.MarkerAnchor.center,
-        icon: "https://goo.gl/1oTJ9Y",
+        icon: "https://goo.gl/1oTJ9Y0",
         locations: [
           static_map.Location(
             state.currentPos.value.latitude,
@@ -226,16 +234,26 @@ class MainLogic extends GetxController {
                                 pw.SizedBox(
                                   height: 80,
                                 ),
-                                pw.Align(
-                                  alignment: pw.Alignment.center,
-                                  child: pw.BarcodeWidget(
-                                    data:
-                                        "http://maps.google.com/maps?q=${state.currentPos.value.latitude},${state.currentPos.value.longitude}",
-                                    barcode: pw.Barcode.qrCode(),
-                                    width: 200,
-                                    height: 100,
-                                  ),
-                                ),
+                                pw.Column(
+                                    mainAxisAlignment: pw.MainAxisAlignment.end,
+                                    children: [
+                                      pw.BarcodeWidget(
+                                        data:
+                                            "http://maps.google.com/maps?q=${state.currentPos.value.latitude},${state.currentPos.value.longitude}",
+                                        barcode: pw.Barcode.qrCode(),
+                                        width: 200,
+                                        height: 100,
+                                      ),
+                                      pw.SizedBox(
+                                        height: 5,
+                                      ),
+                                      pw.Text(
+                                        "voir sur google map",
+                                        style: const pw.TextStyle(
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                    ]),
                                 pw.SizedBox(
                                   height: 100,
                                 ),

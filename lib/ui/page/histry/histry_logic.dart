@@ -3,6 +3,13 @@ part of histry_page;
 class HistryLogic extends GetxController {
   final HistryState state = HistryState();
 
+  @override
+  void onClose() {
+    // TODO: implement onClose
+    state.storage.write("isFirstListPlan", false);
+    state.isFirstListPlan.value = false;
+    super.onClose();
+  }
 
   Future getLocation() async {
     Box box;
